@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan config:clear:*)",
+      "Bash(php artisan make:model:*)",
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan make:seeder:*)",
+      "Bash(php artisan migrate:fresh:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
