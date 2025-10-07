@@ -4,7 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+=======
+>>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -46,6 +49,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+<<<<<<< HEAD
 
     public function roles(): BelongsToMany
     {
@@ -61,4 +65,6 @@ class User extends Authenticatable
     {
         return $this->roles()->whereIn('nombre', $roles)->exists();
     }
+=======
+>>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
 }

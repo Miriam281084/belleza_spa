@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+<<<<<<< HEAD
         $this->call([
             RoleSeeder::class,
             ClienteSeeder::class,
@@ -23,6 +24,13 @@ class DatabaseSeeder extends Seeder
             VentaSeeder::class,
             PagoSeeder::class,
             NotificacionSeeder::class,
+=======
+        // User::factory(10)->create();
+
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+>>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
         ]);
     }
 }
