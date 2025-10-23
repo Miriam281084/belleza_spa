@@ -16,10 +16,7 @@ return new class extends Migration
             $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
             $table->timestamp('fecha')->useCurrent();
             $table->decimal('monto_total', 10, 2);
-<<<<<<< HEAD
             $table->string('metodo_pago', 50);
-=======
->>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
             $table->timestamps();
         });
     }

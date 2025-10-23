@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->timestamps();
-        });
+        // La tabla role_user ahora la maneja Spatie Permission como model_has_roles
+        // Esta migración se mantiene para compatibilidad pero no crea nada
     }
 
     /**

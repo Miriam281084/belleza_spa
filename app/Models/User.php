@@ -4,17 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-=======
->>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -49,22 +47,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-<<<<<<< HEAD
-
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'role_user');
-    }
-
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('nombre', $role)->exists();
-    }
-
-    public function hasAnyRole(array $roles): bool
-    {
-        return $this->roles()->whereIn('nombre', $roles)->exists();
-    }
-=======
->>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
 }

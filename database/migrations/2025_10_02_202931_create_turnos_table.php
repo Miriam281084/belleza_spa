@@ -18,12 +18,8 @@ return new class extends Migration
             $table->foreignId('servicio_id')->constrained('servicios')->onDelete('cascade');
             $table->date('fecha');
             $table->time('hora');
-<<<<<<< HEAD
             $table->enum('estado', ['pendiente', 'confirmado', 'completado', 'realizado', 'cancelado'])->default('pendiente');
             $table->text('observaciones')->nullable();
-=======
-            $table->enum('estado', ['pendiente', 'confirmado', 'realizado', 'cancelado'])->default('pendiente');
->>>>>>> f24e2ba2bb9ad6aefdb86e2dad1670bca014d857
             $table->timestamps();
         });
     }
