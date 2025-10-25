@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\ClientesIndex;
 use App\Livewire\EmpleadosIndex;
+use App\Livewire\ServiciosIndex;
+use App\Livewire\TurnosCalendario;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -39,10 +41,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/empleados', EmpleadosIndex::class)->name('empleados.index');
     });
 
+    // Gestión de servicios (requiere permiso y no ser Cliente)
+    Route::middleware(['no.cliente'])->group(function () {
+        Route::get('/servicios', ServiciosIndex::class)->name('servicios.index');
+    });
+
     // Gestión de turnos (para empleados, requiere permiso)
-    Route::get('/turnos', function () {
-        return view('turnos.index');
-    })->name('turnos.index')->middleware(['no.cliente', 'permission:ver turnos']);
+    Route::middleware(['no.cliente', 'permission:ver turnos'])->group(function () {
+        Route::get('/turnos', TurnosCalendario::class)->name('turnos.index');
+        Route::get('/turnos/eventos', [TurnosCalendario::class, 'obtenerEventos'])->name('turnos.eventos');
+    });
 
     // Mis Turnos (para todos los usuarios autenticados, especialmente Clientes)
     Route::get('/mis-turnos', function () {
