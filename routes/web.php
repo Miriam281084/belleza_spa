@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\ClientesIndex;
+use App\Livewire\EmpleadosIndex;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -31,6 +32,11 @@ Route::middleware(['auth'])->group(function () {
     // Gestión de clientes (requiere permiso y no ser Cliente)
     Route::middleware(['no.cliente', 'permission:ver clientes'])->group(function () {
         Route::get('/clientes', ClientesIndex::class)->name('clientes.index');
+    });
+
+    // Gestión de empleados (requiere permiso y no ser Cliente)
+    Route::middleware(['no.cliente', 'permission:ver empleados'])->group(function () {
+        Route::get('/empleados', EmpleadosIndex::class)->name('empleados.index');
     });
 
     // Gestión de turnos (para empleados, requiere permiso)
