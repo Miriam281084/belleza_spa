@@ -35,7 +35,7 @@ class TurnoForm extends Component
     private function cargarDatos()
     {
         $this->clientes = Cliente::orderBy('nombre')->get();
-        $this->empleados = Empleado::where('activo', true)->orderBy('nombre')->get();
+        $this->empleados = Empleado::orderBy('nombre')->get();
         $this->servicios = Servicio::orderBy('nombre')->get();
     }
 
@@ -136,10 +136,10 @@ class TurnoForm extends Component
         if ($this->turnoId) {
             $turno = Turno::findOrFail($this->turnoId);
             $turno->update($datos);
-            session()->flash('mensaje', 'Turno actualizado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Turno actualizado exitosamente.');
         } else {
             Turno::create($datos);
-            session()->flash('mensaje', 'Turno creado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Turno creado exitosamente.');
         }
 
         $this->cerrarModal();
@@ -185,6 +185,18 @@ class TurnoForm extends Component
         }
 
         return ['disponible' => true, 'mensaje' => ''];
+    }
+
+    public function eliminar()
+    {
+        if ($this->turnoId) {
+            $turno = Turno::findOrFail($this->turnoId);
+            $turno->delete();
+
+            $this->dispatch('mostrarMensaje', mensaje: 'Turno eliminado exitosamente.');
+            $this->cerrarModal();
+            $this->dispatch('turnoGuardado');
+        }
     }
 
     public function cerrarModal()

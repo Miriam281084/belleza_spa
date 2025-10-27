@@ -99,11 +99,11 @@ class ClientesIndex extends Component
             // Actualizar cliente existente
             $cliente = Cliente::findOrFail($this->clienteId);
             $cliente->update($datos);
-            session()->flash('mensaje', 'Cliente actualizado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Cliente actualizado exitosamente.');
         } else {
             // Crear nuevo cliente
             Cliente::create($datos);
-            session()->flash('mensaje', 'Cliente creado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Cliente creado exitosamente.');
         }
 
         $this->cerrarModal();
@@ -129,6 +129,6 @@ class ClientesIndex extends Component
         $cliente = Cliente::findOrFail($id);
         $cliente->delete();
 
-        session()->flash('mensaje', 'Cliente eliminado exitosamente.');
+        $this->dispatch('mostrarMensaje', mensaje: 'Cliente eliminado exitosamente.');
     }
 }

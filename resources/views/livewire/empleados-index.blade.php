@@ -3,11 +3,14 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
             <!-- Mensaje de éxito -->
-            @if (session()->has('mensaje'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                    {{ session('mensaje') }}
-                </div>
-            @endif
+            <div x-data="{ mensaje: '', mostrar: false }"
+                 @mostrar-mensaje.window="mensaje = $event.detail.mensaje; mostrar = true; setTimeout(() => mostrar = false, 3000)"
+                 x-show="mostrar"
+                 x-transition
+                 class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                 style="display: none;">
+                <span x-text="mensaje"></span>
+            </div>
 
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Gestión de Empleados</h2>
@@ -51,7 +54,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($empleados as $empleado)
-                            <tr class="hover:bg-gray-50 transition">
+                            <tr wire:key="empleado-{{ $empleado->id }}" class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $empleado->nombre }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $empleado->apellido }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $empleado->email }}</td>
@@ -72,14 +75,18 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button
                                         wire:click="editar({{ $empleado->id }})"
-                                        class="text-indigo-600 hover:text-indigo-900 mr-3 transition"
+                                        wire:loading.attr="disabled"
+                                        wire:target="editar"
+                                        class="text-indigo-600 hover:text-indigo-900 mr-3 transition disabled:opacity-50"
                                     >
                                         Editar
                                     </button>
                                     <button
                                         wire:click="eliminar({{ $empleado->id }})"
-                                        onclick="return confirm('¿Está seguro de eliminar este empleado?')"
-                                        class="text-red-600 hover:text-red-900 transition"
+                                        wire:confirm="¿Está seguro de eliminar este empleado?"
+                                        wire:loading.attr="disabled"
+                                        wire:target="eliminar"
+                                        class="text-red-600 hover:text-red-900 transition disabled:opacity-50"
                                     >
                                         Eliminar
                                     </button>

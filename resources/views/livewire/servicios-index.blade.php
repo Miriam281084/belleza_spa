@@ -3,11 +3,14 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
             <!-- Mensaje de éxito -->
-            @if (session()->has('mensaje'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                    {{ session('mensaje') }}
-                </div>
-            @endif
+            <div x-data="{ mensaje: '', mostrar: false }"
+                 @mostrar-mensaje.window="mensaje = $event.detail.mensaje; mostrar = true; setTimeout(() => mostrar = false, 3000)"
+                 x-show="mostrar"
+                 x-transition
+                 class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                 style="display: none;">
+                <span x-text="mensaje"></span>
+            </div>
 
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Gestión de Servicios</h2>
@@ -50,7 +53,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($servicios as $servicio)
-                            <tr>
+                            <tr wire:key="servicio-{{ $servicio->id }}">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $servicio->nombre }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-900">
                                     {{ $servicio->descripcion ? Str::limit($servicio->descripcion, 50) : '-' }}
@@ -60,14 +63,18 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button
                                         wire:click="editar({{ $servicio->id }})"
-                                        class="text-indigo-600 hover:text-indigo-900 mr-3"
+                                        wire:loading.attr="disabled"
+                                        wire:target="editar"
+                                        class="text-indigo-600 hover:text-indigo-900 mr-3 disabled:opacity-50"
                                     >
                                         Editar
                                     </button>
                                     <button
                                         wire:click="eliminar({{ $servicio->id }})"
-                                        onclick="return confirm('¿Está seguro de eliminar este servicio?')"
-                                        class="text-red-600 hover:text-red-900"
+                                        wire:confirm="¿Está seguro de eliminar este servicio?"
+                                        wire:loading.attr="disabled"
+                                        wire:target="eliminar"
+                                        class="text-red-600 hover:text-red-900 disabled:opacity-50"
                                     >
                                         Eliminar
                                     </button>

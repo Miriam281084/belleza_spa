@@ -89,11 +89,11 @@ class ServiciosIndex extends Component
             // Actualizar servicio existente
             $servicio = Servicio::findOrFail($this->servicioId);
             $servicio->update($datos);
-            session()->flash('mensaje', 'Servicio actualizado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Servicio actualizado exitosamente.');
         } else {
             // Crear nuevo servicio
             Servicio::create($datos);
-            session()->flash('mensaje', 'Servicio creado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Servicio creado exitosamente.');
         }
 
         $this->cerrarModal();
@@ -117,6 +117,6 @@ class ServiciosIndex extends Component
         $servicio = Servicio::findOrFail($id);
         $servicio->delete();
 
-        session()->flash('mensaje', 'Servicio eliminado exitosamente.');
+        $this->dispatch('mostrarMensaje', mensaje: 'Servicio eliminado exitosamente.');
     }
 }

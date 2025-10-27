@@ -95,11 +95,11 @@ class EmpleadosIndex extends Component
             // Actualizar empleado existente
             $empleado = Empleado::findOrFail($this->empleadoId);
             $empleado->update($datos);
-            session()->flash('mensaje', 'Empleado actualizado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Empleado actualizado exitosamente.');
         } else {
             // Crear nuevo empleado
             Empleado::create($datos);
-            session()->flash('mensaje', 'Empleado creado exitosamente.');
+            $this->dispatch('mostrarMensaje', mensaje: 'Empleado creado exitosamente.');
         }
 
         $this->cerrarModal();
@@ -124,6 +124,6 @@ class EmpleadosIndex extends Component
         $empleado = Empleado::findOrFail($id);
         $empleado->delete();
 
-        session()->flash('mensaje', 'Empleado eliminado exitosamente.');
+        $this->dispatch('mostrarMensaje', mensaje: 'Empleado eliminado exitosamente.');
     }
 }

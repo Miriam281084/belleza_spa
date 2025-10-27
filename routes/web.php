@@ -7,6 +7,7 @@ use App\Livewire\ServiciosIndex;
 use App\Livewire\TurnosCalendario;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\TurnoController;
 
 // Rutas públicas
 Route::get('/', function () {
@@ -49,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     // Gestión de turnos (para empleados, requiere permiso)
     Route::middleware(['no.cliente', 'permission:ver turnos'])->group(function () {
         Route::get('/turnos', TurnosCalendario::class)->name('turnos.index');
-        Route::get('/turnos/eventos', [TurnosCalendario::class, 'obtenerEventos'])->name('turnos.eventos');
+        Route::get('/turnos/eventos', [TurnoController::class, 'obtenerEventos'])->name('turnos.eventos');
     });
 
     // Mis Turnos (para todos los usuarios autenticados, especialmente Clientes)

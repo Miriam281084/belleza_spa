@@ -1,6 +1,6 @@
 <!-- Modal del formulario de turno -->
 <div>
-    @if($modalAbierto)
+    @if($mostrarModal)
         <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <!-- Overlay -->
@@ -19,6 +19,13 @@
                             </h3>
                         </div>
 
+                        <!-- Mensaje de error general -->
+                        @error('general')
+                            <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Fecha -->
                             <div>
@@ -26,7 +33,7 @@
                                 <input
                                     type="date"
                                     id="fecha"
-                                    wire:model="fecha"
+                                    wire:model.blur="fecha"
                                     class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('fecha') border-red-500 @enderror"
                                 >
                                 @error('fecha')
@@ -40,7 +47,7 @@
                                 <input
                                     type="time"
                                     id="hora"
-                                    wire:model="hora"
+                                    wire:model.blur="hora"
                                     class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('hora') border-red-500 @enderror"
                                 >
                                 @error('hora')
@@ -53,7 +60,7 @@
                                 <label for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
                                 <select
                                     id="cliente_id"
-                                    wire:model="cliente_id"
+                                    wire:model.change="cliente_id"
                                     class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('cliente_id') border-red-500 @enderror"
                                 >
                                     <option value="">Seleccione un cliente</option>
@@ -71,7 +78,7 @@
                                 <label for="empleado_id" class="block text-sm font-medium text-gray-700">Empleado *</label>
                                 <select
                                     id="empleado_id"
-                                    wire:model="empleado_id"
+                                    wire:model.change="empleado_id"
                                     class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('empleado_id') border-red-500 @enderror"
                                 >
                                     <option value="">Seleccione un empleado</option>
@@ -107,17 +114,25 @@
                                 <label for="estado" class="block text-sm font-medium text-gray-700">Estado *</label>
                                 <select
                                     id="estado"
-                                    wire:model="estado"
+                                    wire:model.change="estado"
                                     class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('estado') border-red-500 @enderror"
                                 >
                                     <option value="pendiente">Pendiente</option>
                                     <option value="confirmado">Confirmado</option>
-                                    <option value="realizado">Realizado</option>
-                                    <option value="cancelado">Cancelado</option>
+                                    @if($turnoId)
+                                        <!-- Solo mostrar estas opciones al editar un turno existente -->
+                                        <option value="realizado">Realizado</option>
+                                        <option value="cancelado">Cancelado</option>
+                                    @endif
                                 </select>
                                 @error('estado')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
+                                @if(!$turnoId)
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Las opciones "Realizado" y "Cancelado" están disponibles al editar el turno.
+                                    </p>
+                                @endif
                             </div>
                         </div>
 
@@ -138,7 +153,7 @@
                             <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
                             <textarea
                                 id="observaciones"
-                                wire:model="observaciones"
+                                wire:model.blur="observaciones"
                                 rows="3"
                                 class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('observaciones') border-red-500 @enderror"
                             ></textarea>
@@ -162,6 +177,7 @@
                                 type="submit"
                                 wire:loading.attr="disabled"
                                 wire:target="guardar"
+                                onclick="console.log('Botón guardar clickeado', {fecha: @js($fecha), hora: @js($hora), cliente_id: @js($cliente_id), empleado_id: @js($empleado_id), servicio_id: @js($servicio_id)})"
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
                             >
                                 <span wire:loading.remove wire:target="guardar">{{ $turnoId ? 'Actualizar' : 'Guardar' }}</span>
