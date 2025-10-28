@@ -5,6 +5,12 @@ use App\Livewire\ClientesIndex;
 use App\Livewire\EmpleadosIndex;
 use App\Livewire\ServiciosIndex;
 use App\Livewire\TurnosCalendario;
+use App\Livewire\ProductosIndex;
+use App\Livewire\VentasCrear;
+use App\Livewire\VentasHistorial;
+use App\Livewire\PagosRegistrar;
+use App\Livewire\PagosHistorial;
+use App\Livewire\Dashboard;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TurnoController;
@@ -28,9 +34,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard (solo para empleados: Admin, Recepcionista, Esteticista)
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard')->middleware('no.cliente');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard')->middleware('no.cliente');
 
     // Gestión de clientes (requiere permiso y no ser Cliente)
     Route::middleware(['no.cliente', 'permission:ver clientes'])->group(function () {
@@ -45,6 +49,23 @@ Route::middleware(['auth'])->group(function () {
     // Gestión de servicios (requiere permiso y no ser Cliente)
     Route::middleware(['no.cliente'])->group(function () {
         Route::get('/servicios', ServiciosIndex::class)->name('servicios.index');
+    });
+
+    // Gestión de productos (requiere permiso y no ser Cliente)
+    Route::middleware(['no.cliente'])->group(function () {
+        Route::get('/productos', ProductosIndex::class)->name('productos.index');
+    });
+
+    // Gestión de ventas (requiere permiso y no ser Cliente)
+    Route::middleware(['no.cliente'])->group(function () {
+        Route::get('/ventas/crear', VentasCrear::class)->name('ventas.crear');
+        Route::get('/ventas/historial', VentasHistorial::class)->name('ventas.historial');
+    });
+
+    // Gestión de pagos (requiere permiso y no ser Cliente)
+    Route::middleware(['no.cliente'])->group(function () {
+        Route::get('/pagos/registrar', PagosRegistrar::class)->name('pagos.registrar');
+        Route::get('/pagos/historial', PagosHistorial::class)->name('pagos.historial');
     });
 
     // Gestión de turnos (para empleados, requiere permiso)

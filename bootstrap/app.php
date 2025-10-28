@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Console\Scheduling\Schedule;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'no.cliente' => \App\Http\Middleware\RedirectIfCliente::class,
         ]);
+    })
+    ->withSchedule(function (Schedule $schedule): void {
+        // Enviar recordatorios de turnos cada hora
+        $schedule->command('recordatorios:turnos')->hourly();
+
+        // Enviar felicitaciones de cumpleaños diariamente a las 8 AM
+        $schedule->command('cumpleanos:enviar')->dailyAt('08:00');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Manejar error 419 (CSRF Token Mismatch)

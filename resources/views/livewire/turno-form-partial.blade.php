@@ -10,31 +10,31 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
             <!-- Modal panel -->
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full mx-2 sm:mx-0">
                 <form wire:submit.prevent="guardar">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="mb-4">
-                            <h3 class="text-lg font-medium text-gray-900" id="modal-title">
+                    <div class="bg-white px-3 pt-4 pb-3 sm:px-6 sm:pt-5 sm:pb-4">
+                        <div class="mb-3 sm:mb-4">
+                            <h3 class="text-base sm:text-lg font-medium text-gray-900" id="modal-title">
                                 {{ $turnoId ? 'Editar Turno' : 'Nuevo Turno' }}
                             </h3>
                         </div>
 
                         <!-- Mensaje de error general -->
                         @error('general')
-                            <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                            <div class="mb-3 sm:mb-4 p-2 sm:p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-xs sm:text-sm">
                                 {{ $message }}
                             </div>
                         @enderror
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                             <!-- Fecha -->
                             <div>
-                                <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha *</label>
+                                <label for="fecha" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Fecha *</label>
                                 <input
                                     type="date"
                                     id="fecha"
                                     wire:model.blur="fecha"
-                                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('fecha') border-red-500 @enderror"
+                                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('fecha') border-red-500 @enderror"
                                 >
                                 @error('fecha')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -43,12 +43,12 @@
 
                             <!-- Hora -->
                             <div>
-                                <label for="hora" class="block text-sm font-medium text-gray-700">Hora *</label>
+                                <label for="hora" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Hora *</label>
                                 <input
                                     type="time"
                                     id="hora"
                                     wire:model.blur="hora"
-                                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('hora') border-red-500 @enderror"
+                                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('hora') border-red-500 @enderror"
                                 >
                                 @error('hora')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -57,11 +57,11 @@
 
                             <!-- Cliente -->
                             <div>
-                                <label for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
+                                <label for="cliente_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Cliente *</label>
                                 <select
                                     id="cliente_id"
                                     wire:model.change="cliente_id"
-                                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('cliente_id') border-red-500 @enderror"
+                                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('cliente_id') border-red-500 @enderror"
                                 >
                                     <option value="">Seleccione un cliente</option>
                                     @foreach($clientes as $cliente)
@@ -75,11 +75,11 @@
 
                             <!-- Empleado -->
                             <div>
-                                <label for="empleado_id" class="block text-sm font-medium text-gray-700">Empleado *</label>
+                                <label for="empleado_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Empleado *</label>
                                 <select
                                     id="empleado_id"
                                     wire:model.change="empleado_id"
-                                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('empleado_id') border-red-500 @enderror"
+                                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('empleado_id') border-red-500 @enderror"
                                 >
                                     <option value="">Seleccione un empleado</option>
                                     @foreach($empleados as $empleado)
@@ -93,11 +93,11 @@
 
                             <!-- Servicio -->
                             <div>
-                                <label for="servicio_id" class="block text-sm font-medium text-gray-700">Servicio *</label>
+                                <label for="servicio_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Servicio *</label>
                                 <select
                                     id="servicio_id"
                                     wire:model.live="servicio_id"
-                                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('servicio_id') border-red-500 @enderror"
+                                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('servicio_id') border-red-500 @enderror"
                                 >
                                     <option value="">Seleccione un servicio</option>
                                     @foreach($servicios as $servicio)
@@ -111,11 +111,11 @@
 
                             <!-- Estado -->
                             <div>
-                                <label for="estado" class="block text-sm font-medium text-gray-700">Estado *</label>
+                                <label for="estado" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Estado *</label>
                                 <select
                                     id="estado"
                                     wire:model.change="estado"
-                                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('estado') border-red-500 @enderror"
+                                    class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('estado') border-red-500 @enderror"
                                 >
                                     <option value="pendiente">Pendiente</option>
                                     <option value="confirmado">Confirmado</option>
@@ -138,9 +138,9 @@
 
                         <!-- Indicador de duración -->
                         @if($duracionServicio > 0)
-                            <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                                <p class="text-sm text-blue-800">
-                                    <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="mt-3 sm:mt-4 p-2 sm:p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                <p class="text-xs sm:text-sm text-blue-800">
+                                    <svg class="inline w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                     </svg>
                                     <strong>Duración estimada:</strong> {{ $duracionServicio }} minutos
@@ -149,13 +149,13 @@
                         @endif
 
                         <!-- Observaciones -->
-                        <div class="mt-4">
-                            <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
+                        <div class="mt-3 sm:mt-4">
+                            <label for="observaciones" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Observaciones</label>
                             <textarea
                                 id="observaciones"
                                 wire:model.blur="observaciones"
                                 rows="3"
-                                class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 @error('observaciones') border-red-500 @enderror"
+                                class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 @error('observaciones') border-red-500 @enderror"
                             ></textarea>
                             @error('observaciones')
                                 <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -164,12 +164,12 @@
                     </div>
 
                     <!-- Botones del modal -->
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse sm:justify-between">
-                        <div class="flex flex-col-reverse sm:flex-row">
+                    <div class="bg-gray-50 px-3 py-2 sm:px-6 sm:py-3 flex flex-col-reverse sm:flex-row sm:justify-between gap-2">
+                        <div class="flex flex-col-reverse sm:flex-row gap-2">
                             <button
                                 type="button"
                                 wire:click="cerrarModal"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-3 sm:px-4 py-2 bg-white text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto"
                             >
                                 Cancelar
                             </button>
@@ -178,7 +178,7 @@
                                 wire:loading.attr="disabled"
                                 wire:target="guardar"
                                 onclick="console.log('Botón guardar clickeado', {fecha: @js($fecha), hora: @js($hora), cliente_id: @js($cliente_id), empleado_id: @js($empleado_id), servicio_id: @js($servicio_id)})"
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 sm:px-4 py-2 bg-blue-600 text-xs sm:text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto disabled:opacity-50"
                             >
                                 <span wire:loading.remove wire:target="guardar">{{ $turnoId ? 'Actualizar' : 'Guardar' }}</span>
                                 <span wire:loading wire:target="guardar">Guardando...</span>
@@ -192,7 +192,7 @@
                                 wire:confirm="¿Está seguro de eliminar este turno?"
                                 wire:loading.attr="disabled"
                                 wire:target="eliminar"
-                                class="mt-3 sm:mt-0 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm disabled:opacity-50"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 sm:px-4 py-2 bg-red-600 text-xs sm:text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto disabled:opacity-50"
                             >
                                 <span wire:loading.remove wire:target="eliminar">Eliminar Turno</span>
                                 <span wire:loading wire:target="eliminar">Eliminando...</span>

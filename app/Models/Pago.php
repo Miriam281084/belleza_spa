@@ -10,10 +10,13 @@ class Pago extends Model
     protected $fillable = [
         'cliente_id',
         'turno_id',
+        'venta_id',
         'monto',
         'metodo_pago',
         'fecha_pago',
         'estado',
+        'mercadopago_preference_id',
+        'mercadopago_payment_id',
     ];
 
     protected $casts = [
@@ -29,5 +32,10 @@ class Pago extends Model
     public function turno(): BelongsTo
     {
         return $this->belongsTo(Turno::class);
+    }
+
+    public function venta(): BelongsTo
+    {
+        return $this->belongsTo(Venta::class);
     }
 }

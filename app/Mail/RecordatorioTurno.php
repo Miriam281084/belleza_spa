@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Mail;
+
+use App\Models\Turno;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class RecordatorioTurno extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    public $turno;
+
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(Turno $turno)
+    {
+        $this->turno = $turno;
+    }
+
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Recordatorio de Turno - Belleza & SPA Victoria',
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.recordatorio-turno',
+            with: [
+                'turno' => $this->turno,
+            ]
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
+    }
+}

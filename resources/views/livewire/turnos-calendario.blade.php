@@ -1,7 +1,7 @@
 <div>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+    <div class="py-6 md:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4 md:p-6">
 
                 <!-- Mensaje de éxito -->
                 <div x-data="{ mensaje: '', mostrar: false }"
@@ -9,22 +9,22 @@
                      x-show="mostrar"
                      x-transition
                      x-cloak
-                     class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                     class="mb-3 md:mb-4 bg-green-100 border border-green-400 text-green-700 px-3 md:px-4 py-2 md:py-3 rounded relative text-sm md:text-base"
                      role="alert">
                     <span x-text="mensaje"></span>
-                    <button @click="mostrar = false" class="absolute top-0 right-0 px-4 py-3">
+                    <button @click="mostrar = false" class="absolute top-0 right-0 px-3 md:px-4 py-2 md:py-3">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Calendario de Turnos</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">Calendario de Turnos</h2>
                     <button
                         wire:click="abrirModalCrear('{{ date('Y-m-d') }}', '09:00')"
                         type="button"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition shadow-md hover:shadow-lg"
+                        class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition shadow-md hover:shadow-lg text-sm md:text-base"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Nueva Cita
@@ -32,22 +32,22 @@
                 </div>
 
                 <!-- Leyenda de colores -->
-                <div class="mb-4 flex flex-wrap gap-4 text-sm">
+                <div class="mb-3 md:mb-4 flex flex-wrap gap-2 md:gap-4 text-xs md:text-sm">
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded border-2" style="background-color: #FDE047; border-color: #FACC15;"></div>
-                        <span class="ml-2 font-medium">Pendiente</span>
+                        <div class="w-4 h-4 md:w-6 md:h-6 rounded border-2 flex-shrink-0" style="background-color: #FDE047; border-color: #FACC15;"></div>
+                        <span class="ml-1 md:ml-2 font-medium">Pendiente</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded border-2" style="background-color: #4ADE80; border-color: #22C55E;"></div>
-                        <span class="ml-2 font-medium">Confirmado</span>
+                        <div class="w-4 h-4 md:w-6 md:h-6 rounded border-2 flex-shrink-0" style="background-color: #4ADE80; border-color: #22C55E;"></div>
+                        <span class="ml-1 md:ml-2 font-medium">Confirmado</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded border-2" style="background-color: #60A5FA; border-color: #3B82F6;"></div>
-                        <span class="ml-2 font-medium">Realizado</span>
+                        <div class="w-4 h-4 md:w-6 md:h-6 rounded border-2 flex-shrink-0" style="background-color: #60A5FA; border-color: #3B82F6;"></div>
+                        <span class="ml-1 md:ml-2 font-medium">Realizado</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded border-2" style="background-color: #FB7185; border-color: #F43F5E;"></div>
-                        <span class="ml-2 font-medium">Cancelado</span>
+                        <div class="w-4 h-4 md:w-6 md:h-6 rounded border-2 flex-shrink-0" style="background-color: #FB7185; border-color: #F43F5E;"></div>
+                        <span class="ml-1 md:ml-2 font-medium">Cancelado</span>
                     </div>
                 </div>
 
@@ -166,6 +166,27 @@ document.addEventListener('DOMContentLoaded', function() {
 #calendar {
     max-width: 100%;
     margin: 0 auto;
+    font-size: 14px;
+}
+
+/* Responsive: reducir tamaño de fuente en móviles */
+@media (max-width: 640px) {
+    #calendar {
+        font-size: 11px;
+    }
+
+    .fc-toolbar-title {
+        font-size: 1.1rem !important;
+    }
+
+    .fc-button {
+        padding: 0.3rem 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    .fc-col-header-cell-cushion {
+        padding: 2px !important;
+    }
 }
 
 /* Estilos generales para todos los eventos */
