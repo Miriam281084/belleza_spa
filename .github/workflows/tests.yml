@@ -1,0 +1,53 @@
+name: Tests Laravel - Módulo Clientes
+
+# Cuándo se ejecuta
+on:
+  push:
+    branches: ["main", "master", "develop"]
+  pull_request:
+    branches: ["main", "master", "develop"]
+
+jobs:
+  tests:
+    name: Ejecutar Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar tu código
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      # 2. Instalar PHP
+      - name: Instalar PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          tools: composer:v2
+          coverage: none
+
+      # 3. Copiar .env
+      - name: Crear archivo de configuración
+        run: cp .env.example .env
+
+      # 4. Instalar dependencias
+      - name: Instalar dependencias PHP
+        run: composer install --no-interaction --prefer-dist
+
+      # 5. Generar APP_KEY
+      - name: Generar clave de aplicación
+        run: php artisan key:generate
+
+      # 6. Ejecutar migraciones
+      - name: Preparar base de datos
+        run: php artisan migrate --force
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+
+      # 7. Ejecutar TODOS los tests
+      - name: Ejecutar tests
+        run: php artisan test
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
