@@ -234,6 +234,80 @@
                                         </table>
                                     </div>
                                 </div>
+
+                                <!-- Pagos de la venta -->
+                                <div class="mb-4">
+                                    <h4 class="text-sm md:text-base font-semibold text-gray-800 mb-3">Pagos Registrados</h4>
+                                    @if($ventaSeleccionada->pagos->count() > 0)
+                                        <div class="overflow-x-auto">
+                                            <table class="min-w-full divide-y divide-gray-200">
+                                                <thead class="bg-gray-50">
+                                                    <tr>
+                                                        <th class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                                                        <th class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Método</th>
+                                                        <th class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
+                                                        <th class="px-2 md:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="bg-white divide-y divide-gray-200">
+                                                    @foreach($ventaSeleccionada->pagos as $pago)
+                                                        <tr>
+                                                            <td class="px-2 md:px-4 py-2 text-xs md:text-sm text-gray-900">
+                                                                {{ $pago->fecha_pago->format('d/m/Y H:i') }}
+                                                            </td>
+                                                            <td class="px-2 md:px-4 py-2 text-xs md:text-sm text-gray-900">
+                                                                <span class="px-2 py-1 text-xs rounded-full
+                                                                    @if($pago->metodo_pago === 'efectivo') bg-green-100 text-green-800
+                                                                    @elseif($pago->metodo_pago === 'tarjeta') bg-blue-100 text-blue-800
+                                                                    @elseif($pago->metodo_pago === 'transferencia') bg-purple-100 text-purple-800
+                                                                    @else bg-yellow-100 text-yellow-800
+                                                                    @endif">
+                                                                    {{ ucfirst($pago->metodo_pago) }}
+                                                                </span>
+                                                            </td>
+                                                            <td class="px-2 md:px-4 py-2 text-xs md:text-sm font-semibold text-green-600">
+                                                                ${{ number_format($pago->monto, 2) }}
+                                                            </td>
+                                                            <td class="px-2 md:px-4 py-2 text-xs md:text-sm">
+                                                                <span class="px-2 py-1 text-xs rounded-full
+                                                                    @if($pago->estado === 'completado') bg-green-100 text-green-800
+                                                                    @else bg-orange-100 text-orange-800
+                                                                    @endif">
+                                                                    {{ ucfirst($pago->estado) }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot class="bg-gray-50">
+                                                    <tr>
+                                                        <td colspan="2" class="px-2 md:px-4 py-2 text-right text-xs md:text-sm font-semibold text-gray-900">
+                                                            Total Pagado:
+                                                        </td>
+                                                        <td class="px-2 md:px-4 py-2 text-xs md:text-sm font-bold text-green-600">
+                                                            ${{ number_format($ventaSeleccionada->totalPagado(), 2) }}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" class="px-2 md:px-4 py-2 text-right text-xs md:text-sm font-semibold text-gray-900">
+                                                            Saldo Pendiente:
+                                                        </td>
+                                                        <td class="px-2 md:px-4 py-2 text-xs md:text-sm font-bold
+                                                            @if($ventaSeleccionada->saldoPendiente() > 0) text-red-600 @else text-green-600 @endif">
+                                                            ${{ number_format($ventaSeleccionada->saldoPendiente(), 2) }}
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <p class="text-sm text-gray-500 bg-gray-50 p-3 rounded">
+                                            No hay pagos registrados para esta venta.
+                                        </p>
+                                    @endif
+                                </div>
                             </div>
 
                             <!-- Botones del modal -->

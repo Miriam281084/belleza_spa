@@ -35,4 +35,24 @@ return [
         ],
     ],
 
+    'mercadopago' => [
+        'public_key' => env('MERCADOPAGO_PUBLIC_KEY'),
+        'access_token' => env('MERCADOPAGO_ACCESS_TOKEN'),
+    ],
+
+    'twilio' => [
+        'sid' => env('TWILIO_SID'),
+        'token' => env('TWILIO_AUTH_TOKEN'),
+        'whatsapp_from' => env('TWILIO_WHATSAPP_FROM', 'whatsapp:+14155238886'),
+    ],
+
+    'whatsapp' => [
+        'provider' => env('WHATSAPP_PROVIDER', 'twilio'), // 'twilio' (sandbox gratis) o 'callmebot' (no funciona en Argentina)
+        'enabled' => env('WHATSAPP_ENABLED', false),
+
+        // CallMeBot (alternativa - no funciona en Argentina)
+        'callmebot_api_key' => env('CALLMEBOT_API_KEY'),
+        'callmebot_phone' => env('CALLMEBOT_PHONE'), // Tu número sin + ni espacios (ej: 5491123456789)
+    ],
+
 ];

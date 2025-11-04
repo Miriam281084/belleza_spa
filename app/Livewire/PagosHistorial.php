@@ -33,6 +33,8 @@ class PagosHistorial extends Component
     public function render()
     {
         $query = Pago::with(['cliente', 'turno.servicio', 'venta'])
+            ->whereNotNull('turno_id')  // Solo pagos de turnos
+            ->whereNull('venta_id')      // Excluir pagos de ventas
             ->orderBy('fecha_pago', 'desc');
 
         // Filtro por fechas
@@ -58,12 +60,16 @@ class PagosHistorial extends Component
 
         $pagos = $query->paginate(15);
 
-        // Calcular estadísticas
-        $totalPagos = Pago::whereDate('fecha_pago', '>=', $this->fechaInicio)
+        // Calcular estadísticas solo para pagos de turnos
+        $totalPagos = Pago::whereNotNull('turno_id')
+            ->whereNull('venta_id')
+            ->whereDate('fecha_pago', '>=', $this->fechaInicio)
             ->whereDate('fecha_pago', '<=', $this->fechaFin)
             ->sum('monto');
 
-        $totalPorMetodo = Pago::whereDate('fecha_pago', '>=', $this->fechaInicio)
+        $totalPorMetodo = Pago::whereNotNull('turno_id')
+            ->whereNull('venta_id')
+            ->whereDate('fecha_pago', '>=', $this->fechaInicio)
             ->whereDate('fecha_pago', '<=', $this->fechaFin)
             ->selectRaw('metodo_pago, SUM(monto) as total')
             ->groupBy('metodo_pago')

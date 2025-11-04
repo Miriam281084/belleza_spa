@@ -14,6 +14,7 @@ use App\Livewire\Dashboard;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\MercadoPagoController;
 
 // Rutas públicas
 Route::get('/', function () {
@@ -79,3 +80,9 @@ Route::middleware(['auth'])->group(function () {
         return view('turnos.mis-turnos');
     })->name('mis-turnos');
 });
+
+// Rutas de Mercado Pago (sin autenticación requerida para webhooks)
+Route::get('/mercadopago/success', [MercadoPagoController::class, 'success'])->name('mercadopago.success');
+Route::get('/mercadopago/failure', [MercadoPagoController::class, 'failure'])->name('mercadopago.failure');
+Route::get('/mercadopago/pending', [MercadoPagoController::class, 'pending'])->name('mercadopago.pending');
+Route::post('/mercadopago/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');

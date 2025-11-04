@@ -35,7 +35,7 @@ class VentasHistorial extends Component
 
     public function render()
     {
-        $query = Venta::with(['cliente', 'productos'])
+        $query = Venta::with(['cliente', 'productos', 'pagos'])
             ->orderBy('fecha', 'desc');
 
         // Filtro por fechas
@@ -63,7 +63,7 @@ class VentasHistorial extends Component
 
     public function verDetalle($ventaId)
     {
-        $this->ventaSeleccionada = Venta::with(['cliente', 'productos'])->findOrFail($ventaId);
+        $this->ventaSeleccionada = Venta::with(['cliente', 'productos', 'pagos'])->findOrFail($ventaId);
         $this->mostrarDetalle = true;
     }
 

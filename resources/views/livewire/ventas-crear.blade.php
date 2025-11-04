@@ -108,11 +108,17 @@
 
                     <!-- Selección de cliente -->
                     <div class="mb-4 md:mb-6">
-                        <label for="id_cliente" class="block text-sm font-medium text-gray-700 mb-1 md:mb-2">Cliente *</label>
+                        <label for="id_cliente" class="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
+                            Cliente *
+                            @if(!empty($productosEnCarrito) && empty($id_cliente))
+                                <span class="text-red-600 text-xs font-normal">(Requerido para continuar)</span>
+                            @endif
+                        </label>
                         <select
                             id="id_cliente"
-                            wire:model="id_cliente"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base @error('id_cliente') border-red-500 @enderror"
+                            wire:model.live="id_cliente"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base @error('id_cliente') border-red-500 @enderror
+                            @if(!empty($productosEnCarrito) && empty($id_cliente)) border-amber-500 ring-2 ring-amber-200 @endif"
                         >
                             <option value="">Seleccione un cliente</option>
                             @foreach($clientes as $cliente)
@@ -196,8 +202,8 @@
                         wire:click="procesarVenta"
                         wire:loading.attr="disabled"
                         wire:target="procesarVenta"
+                        {{ (empty($productosEnCarrito) || empty($id_cliente)) ? 'disabled' : '' }}
                         class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 md:py-3 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
-                        @if(empty($productosEnCarrito) || empty($id_cliente)) disabled @endif
                     >
                         <span wire:loading.remove wire:target="procesarVenta">
                             Procesar Venta
@@ -208,12 +214,16 @@
                     </button>
 
                     @if(empty($productosEnCarrito))
-                        <p class="text-xs text-center text-red-500 mt-2">
-                            Agregue productos al carrito
+                        <p class="text-xs text-center text-amber-600 mt-2 font-medium">
+                            📦 Primero agregue productos al carrito
                         </p>
                     @elseif(empty($id_cliente))
-                        <p class="text-xs text-center text-red-500 mt-2">
-                            Seleccione un cliente
+                        <p class="text-xs text-center text-amber-600 mt-2 font-medium">
+                            👤 Seleccione un cliente para procesar la venta
+                        </p>
+                    @else
+                        <p class="text-xs text-center text-green-600 mt-2 font-medium">
+                            ✅ ¡Listo para procesar!
                         </p>
                     @endif
 

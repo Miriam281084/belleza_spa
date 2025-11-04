@@ -6,10 +6,13 @@ use App\Models\Turno;
 use App\Models\Cliente;
 use App\Models\Empleado;
 use App\Models\Servicio;
+use App\Services\WhatsAppService;
+use App\Mail\RecordatorioTurno;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 #[Layout('layouts.app')]
 class TurnosCalendario extends Component
@@ -176,12 +179,29 @@ class TurnosCalendario extends Component
             ];
 
             if ($this->turnoId) {
+                // Actualización de turno
                 $turno = Turno::findOrFail($this->turnoId);
+                $estadoAnterior = $turno->estado;
                 $turno->update($datos);
+                $turno->load(['cliente', 'empleado', 'servicio']); // Recargar relaciones
+
                 $mensaje = 'Turno actualizado exitosamente.';
+
+                // Si cambió a confirmado, enviar notificaciones
+                if ($estadoAnterior !== 'confirmado' && $this->estado === 'confirmado') {
+                    $this->enviarNotificacionesTurno($turno);
+                }
             } else {
-                Turno::create($datos);
+                // Creación de turno
+                $turno = Turno::create($datos);
+                $turno->load(['cliente', 'empleado', 'servicio']); // Cargar relaciones
+
                 $mensaje = 'Turno creado exitosamente.';
+
+                // Si se crea como confirmado, enviar notificaciones
+                if ($this->estado === 'confirmado') {
+                    $this->enviarNotificacionesTurno($turno);
+                }
             }
 
             // Disparar eventos ANTES de cerrar el modal
@@ -249,5 +269,31 @@ class TurnosCalendario extends Component
     {
         $this->mostrarModal = false;
         $this->resetearFormulario();
+    }
+
+    /**
+     * Enviar notificaciones de turno por WhatsApp y Email
+     */
+    private function enviarNotificacionesTurno($turno)
+    {
+        try {
+            // Enviar WhatsApp
+            $whatsappService = new WhatsAppService();
+            if ($whatsappService->estaHabilitado()) {
+                $whatsappService->enviarConfirmacionTurno($turno);
+            }
+
+            // Enviar Email
+            if ($turno->cliente->email) {
+                Mail::to($turno->cliente->email)->send(new RecordatorioTurno($turno));
+            }
+
+        } catch (\Exception $e) {
+            // Log del error pero no interrumpir el flujo
+            \Log::error('Error al enviar notificaciones de turno', [
+                'turno_id' => $turno->id,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }
