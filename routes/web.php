@@ -11,6 +11,7 @@ use App\Livewire\VentasHistorial;
 use App\Livewire\PagosRegistrar;
 use App\Livewire\PagosHistorial;
 use App\Livewire\Dashboard;
+use App\Livewire\MisTurnos;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TurnoController;
@@ -64,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Gestión de pagos (requiere permiso y no ser Cliente)
-    Route::middleware(['no.cliente'])->group(function () {
+    Route::middleware(['no.cliente', 'permission:ver pagos'])->group(function () {
         Route::get('/pagos/registrar', PagosRegistrar::class)->name('pagos.registrar');
         Route::get('/pagos/historial', PagosHistorial::class)->name('pagos.historial');
     });
@@ -76,9 +77,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Mis Turnos (para todos los usuarios autenticados, especialmente Clientes)
-    Route::get('/mis-turnos', function () {
-        return view('turnos.mis-turnos');
-    })->name('mis-turnos');
+    Route::get('/mis-turnos', MisTurnos::class)->name('mis-turnos');
 });
 
 // Rutas de Mercado Pago (sin autenticación requerida para webhooks)

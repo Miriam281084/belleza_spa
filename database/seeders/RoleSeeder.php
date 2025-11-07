@@ -43,7 +43,7 @@ class RoleSeeder extends Seeder
             'editar productos',
             'eliminar productos',
 
-            // Turnos
+            // Turnos (calendario administrativo)
             'ver turnos',
             'crear turnos',
             'editar turnos',
@@ -54,6 +54,12 @@ class RoleSeeder extends Seeder
             'crear ventas',
             'editar ventas',
             'eliminar ventas',
+
+            // Pagos
+            'ver pagos',
+            'crear pagos',
+            'editar pagos',
+            'eliminar pagos',
 
             // Reportes
             'ver reportes',
@@ -73,7 +79,7 @@ class RoleSeeder extends Seeder
         $adminRole = Role::create(['name' => 'Admin']);
         $adminRole->givePermissionTo(Permission::all());
 
-        // Recepcionista - Gestión de clientes, turnos y ventas
+        // Recepcionista - Gestión de clientes, turnos, ventas y pagos
         $recepcionistaRole = Role::create(['name' => 'Recepcionista']);
         $recepcionistaRole->givePermissionTo([
             'ver clientes',
@@ -86,9 +92,11 @@ class RoleSeeder extends Seeder
             'editar turnos',
             'ver ventas',
             'crear ventas',
+            'ver pagos',
+            'crear pagos',
         ]);
 
-        // Esteticista - Ver turnos y servicios
+        // Esteticista - Ver clientes, servicios, productos y turnos (solo editar turnos asignados)
         $esteticistaPole = Role::create(['name' => 'Esteticista']);
         $esteticistaPole->givePermissionTo([
             'ver clientes',
@@ -98,13 +106,11 @@ class RoleSeeder extends Seeder
             'editar turnos',
         ]);
 
-        // Cliente - Solo ver sus propios datos
+        // Cliente - Solo ver servicios y productos (gestiona sus propios turnos sin permisos administrativos)
         $clienteRole = Role::create(['name' => 'Cliente']);
         $clienteRole->givePermissionTo([
             'ver servicios',
             'ver productos',
-            'ver turnos',
-            'crear turnos',
         ]);
     }
 }

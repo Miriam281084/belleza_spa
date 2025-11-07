@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Cliente;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -38,12 +39,23 @@ class UserSeeder extends Seeder
         ]);
         $esteticista->assignRole('Esteticista');
 
-        // Crear usuario Cliente
-        $cliente = User::create([
+        // Crear usuario Cliente y relacionarlo con un registro de cliente
+        $clienteUser = User::create([
             'name' => 'Ana López',
             'email' => 'cliente@belleza.com',
             'password' => Hash::make('password'),
         ]);
-        $cliente->assignRole('Cliente');
+        $clienteUser->assignRole('Cliente');
+
+        // Crear perfil de cliente asociado al usuario
+        Cliente::create([
+            'user_id' => $clienteUser->id,
+            'nombre' => 'Ana',
+            'apellido' => 'López',
+            'dni' => '99999999',
+            'telefono' => '+54 11 1234-5678',
+            'email' => 'cliente@belleza.com',
+            'fecha_nacimiento' => '1995-05-15',
+        ]);
     }
 }

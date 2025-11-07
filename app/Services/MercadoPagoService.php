@@ -18,7 +18,7 @@ class MercadoPagoService
     }
 
     /**
-     * Crear una preferencia de pago
+     * Crear una preferencia de pagorrrrrrrrrr
      *
      * @param array $data
      * @return array|null
