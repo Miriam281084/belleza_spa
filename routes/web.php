@@ -78,6 +78,17 @@ Route::middleware(['auth'])->group(function () {
 
     // Mis Turnos (para todos los usuarios autenticados, especialmente Clientes)
     Route::get('/mis-turnos', MisTurnos::class)->name('mis-turnos');
+
+    // Rutas específicas para Clientes (carrito y pagos)
+    Route::middleware(['permission:ver productos|ver ventas'])->group(function () {
+        Route::get('/mi-carrito', VentasCrear::class)->name('mi-carrito');
+        Route::get('/mis-compras', VentasHistorial::class)->name('mis-compras');
+    });
+
+    Route::middleware(['permission:ver pagos|crear pagos'])->group(function () {
+        Route::get('/mis-pagos', PagosRegistrar::class)->name('mis-pagos');
+        Route::get('/historial-pagos', PagosHistorial::class)->name('historial-pagos');
+    });
 });
 
 // Rutas de Mercado Pago (sin autenticación requerida para webhooks)

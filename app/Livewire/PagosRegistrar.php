@@ -7,6 +7,7 @@ use App\Models\Pago;
 use App\Models\Turno;
 use App\Models\Venta;
 use App\Services\MercadoPagoService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -32,8 +33,44 @@ class PagosRegistrar extends Component
     public $mercadopago_qr = null;
     public $mostrarQR = false;
 
+    // Propiedades para Cliente
+    public $esCliente = false;
+    public $clienteActual = null;
+
     public function mount($tipo = '', $id = null)
     {
+        $user = Auth::user();
+
+        // Verificar si el usuario autenticado tiene rol Cliente
+        if ($user->hasRole('Cliente')) {
+            $this->esCliente = true;
+
+            // Buscar o crear el perfil de cliente
+            $cliente = Cliente::where('user_id', $user->id)->first();
+
+            if (!$cliente) {
+                $cliente = Cliente::where('email', $user->email)->first();
+                if ($cliente) {
+                    $cliente->update(['user_id' => $user->id]);
+                }
+            }
+
+            if (!$cliente) {
+                $nombreCompleto = explode(' ', $user->name, 2);
+                $cliente = Cliente::create([
+                    'user_id' => $user->id,
+                    'nombre' => $nombreCompleto[0] ?? $user->name,
+                    'apellido' => $nombreCompleto[1] ?? '',
+                    'dni' => '',
+                    'email' => $user->email,
+                    'telefono' => '',
+                ]);
+            }
+
+            $this->clienteActual = $cliente;
+            $this->id_cliente = $cliente->id;
+        }
+
         // Inicializar filtros según el tipo
         if ($tipo === 'turno') {
             $this->filtroTurnos = true;
@@ -113,20 +150,32 @@ class PagosRegistrar extends Component
     {
         $clientes = Cliente::orderBy('nombre', 'asc')->get();
 
-        // Filtrar solo turnos con saldo pendiente
-        $turnos = Turno::with(['servicio', 'cliente', 'pagos'])
+        // Filtrar turnos según si es cliente o empleado
+        $turnosQuery = Turno::with(['servicio', 'cliente', 'pagos'])
             ->whereIn('estado', ['pendiente', 'confirmado', 'realizado'])
-            ->orderBy('fecha', 'desc')
-            ->get()
+            ->orderBy('fecha', 'desc');
+
+        // Si es cliente, filtrar solo sus turnos
+        if ($this->esCliente && $this->clienteActual) {
+            $turnosQuery->where('cliente_id', $this->clienteActual->id);
+        }
+
+        $turnos = $turnosQuery->get()
             ->filter(function($turno) {
                 return $turno->saldoPendiente() > 0;
             });
 
-        // Filtrar solo ventas con saldo pendiente
-        $ventas = Venta::with(['cliente', 'pagos'])
+        // Filtrar ventas según si es cliente o empleado
+        $ventasQuery = Venta::with(['cliente', 'pagos'])
             ->orderBy('fecha', 'desc')
-            ->limit(100)
-            ->get()
+            ->limit(100);
+
+        // Si es cliente, filtrar solo sus ventas
+        if ($this->esCliente && $this->clienteActual) {
+            $ventasQuery->where('cliente_id', $this->clienteActual->id);
+        }
+
+        $ventas = $ventasQuery->get()
             ->filter(function($venta) {
                 return $venta->saldoPendiente() > 0;
             });

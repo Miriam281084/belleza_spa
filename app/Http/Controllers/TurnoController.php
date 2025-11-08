@@ -3,17 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Turno;
+use App\Models\Empleado;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TurnoController extends Controller
 {
     /**
      * Obtiene los eventos del calendario en formato JSON para FullCalendar
+     * Filtra por empleado si el usuario es Esteticista
      */
     public function obtenerEventos()
     {
-        $turnos = Turno::with(['cliente', 'empleado', 'servicio'])->get();
+        $user = Auth::user();
+        $query = Turno::with(['cliente', 'empleado', 'servicio']);
+
+        // Si es Esteticista, solo mostrar sus propios turnos
+        if ($user->hasRole('Esteticista')) {
+            $empleado = Empleado::where('user_id', $user->id)
+                ->orWhere('email', $user->email)
+                ->first();
+
+            if ($empleado) {
+                $query->where('empleado_id', $empleado->id);
+            } else {
+                // Si no tiene perfil de empleado, no mostrar nada
+                return response()->json([]);
+            }
+        }
+
+        $turnos = $query->get();
 
         $eventos = [];
         foreach ($turnos as $turno) {

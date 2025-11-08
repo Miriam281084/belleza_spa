@@ -12,6 +12,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 #[Layout('layouts.app')]
@@ -36,8 +37,26 @@ class TurnosCalendario extends Component
     public $empleados = [];
     public $servicios = [];
 
+    // Propiedades para control de roles
+    public $esEsteticista = false;
+    public $empleadoActual = null;
+    public $puedeCrearTurnos = true;
+
     public function mount()
     {
+        $user = Auth::user();
+
+        // Detectar si es Esteticista
+        if ($user->hasRole('Esteticista')) {
+            $this->esEsteticista = true;
+            $this->puedeCrearTurnos = false; // Esteticistas NO pueden crear turnos
+
+            // Buscar su perfil de empleado
+            $this->empleadoActual = Empleado::where('user_id', $user->id)
+                ->orWhere('email', $user->email)
+                ->first();
+        }
+
         $this->cargarDatos();
     }
 
@@ -58,6 +77,15 @@ class TurnosCalendario extends Component
 
     public function abrirModalCrear($fecha, $hora)
     {
+        // Esteticistas no pueden crear turnos
+        if ($this->esEsteticista) {
+            $this->dispatch('mostrarMensaje',
+                mensaje: 'Las esteticistas no pueden crear turnos. Contacte con recepción.',
+                tipo: 'error'
+            );
+            return;
+        }
+
         $this->resetearFormulario();
         $this->fecha = $fecha;
         $this->hora = $hora;
@@ -67,6 +95,19 @@ class TurnosCalendario extends Component
     public function abrirModalEditar($turnoId)
     {
         $this->resetearFormulario();
+        $turno = Turno::find($turnoId);
+
+        // Esteticistas solo pueden editar sus propios turnos
+        if ($this->esEsteticista && $this->empleadoActual) {
+            if ($turno->empleado_id != $this->empleadoActual->id) {
+                $this->dispatch('mostrarMensaje',
+                    mensaje: 'Solo puedes editar tus propios turnos.',
+                    tipo: 'error'
+                );
+                return;
+            }
+        }
+
         $this->cargarTurno($turnoId);
         $this->mostrarModal = true;
     }

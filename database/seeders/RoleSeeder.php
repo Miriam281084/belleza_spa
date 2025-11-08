@@ -85,6 +85,7 @@ class RoleSeeder extends Seeder
             'ver clientes',
             'crear clientes',
             'editar clientes',
+            'ver empleados',  // NUEVO: para consultar disponibilidad de esteticistas
             'ver servicios',
             'ver productos',
             'ver turnos',
@@ -96,21 +97,24 @@ class RoleSeeder extends Seeder
             'crear pagos',
         ]);
 
-        // Esteticista - Ver clientes, servicios, productos y turnos (solo editar turnos asignados)
+        // Esteticista - Solo ve su agenda personal y edita sus turnos asignados
         $esteticistaPole = Role::create(['name' => 'Esteticista']);
         $esteticistaPole->givePermissionTo([
-            'ver clientes',
-            'ver servicios',
-            'ver productos',
-            'ver turnos',
-            'editar turnos',
+            'ver clientes',    // Para ver datos del cliente en su turno
+            'ver servicios',   // Para consultar información del servicio
+            'ver turnos',      // Solo verá SUS propios turnos (filtrado en el componente)
+            'editar turnos',   // Solo puede cambiar estado de SUS turnos
         ]);
 
-        // Cliente - Solo ver servicios y productos (gestiona sus propios turnos sin permisos administrativos)
+        // Cliente - Ver servicios y productos, crear ventas (carrito) y pagos (Mercado Pago)
         $clienteRole = Role::create(['name' => 'Cliente']);
         $clienteRole->givePermissionTo([
             'ver servicios',
             'ver productos',
+            'ver ventas',
+            'crear ventas',
+            'ver pagos',
+            'crear pagos',
         ]);
     }
 }

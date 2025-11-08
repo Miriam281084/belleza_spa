@@ -265,7 +265,7 @@
                             <!-- Servicio -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Servicio *</label>
-                                <select wire:model="servicio_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
+                                <select wire:model.defer="servicio_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
                                     <option value="">Selecciona un servicio</option>
                                     @foreach($servicios as $servicio)
                                         <option value="{{ $servicio->id }}">
@@ -279,7 +279,7 @@
                             <!-- Empleado -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Profesional *</label>
-                                <select wire:model="empleado_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
+                                <select wire:model.defer="empleado_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
                                     <option value="">Selecciona un profesional</option>
                                     @foreach($empleados as $empleado)
                                         <option value="{{ $empleado->id }}">{{ $empleado->nombre }} {{ $empleado->apellido }}</option>

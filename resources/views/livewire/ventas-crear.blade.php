@@ -110,21 +110,36 @@
                     <div class="mb-4 md:mb-6">
                         <label for="id_cliente" class="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                             Cliente *
-                            @if(!empty($productosEnCarrito) && empty($id_cliente))
+                            @if(!empty($productosEnCarrito) && empty($id_cliente) && !$esCliente)
                                 <span class="text-red-600 text-xs font-normal">(Requerido para continuar)</span>
                             @endif
                         </label>
-                        <select
-                            id="id_cliente"
-                            wire:model.live="id_cliente"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base @error('id_cliente') border-red-500 @enderror
-                            @if(!empty($productosEnCarrito) && empty($id_cliente)) border-amber-500 ring-2 ring-amber-200 @endif"
-                        >
-                            <option value="">Seleccione un cliente</option>
-                            @foreach($clientes as $cliente)
-                                <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                            @endforeach
-                        </select>
+
+                        @if($esCliente && $clienteActual)
+                            <!-- Mostrar nombre del cliente autenticado -->
+                            <div class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-sm md:text-base">
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="font-medium">{{ $clienteActual->nombre }} {{ $clienteActual->apellido }}</span>
+                                </div>
+                            </div>
+                        @else
+                            <!-- Selector de cliente para empleados -->
+                            <select
+                                id="id_cliente"
+                                wire:model.live="id_cliente"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base @error('id_cliente') border-red-500 @enderror
+                                @if(!empty($productosEnCarrito) && empty($id_cliente)) border-amber-500 ring-2 ring-amber-200 @endif"
+                            >
+                                <option value="">Seleccione un cliente</option>
+                                @foreach($clientes as $cliente)
+                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre }} {{ $cliente->apellido }}</option>
+                                @endforeach
+                            </select>
+                        @endif
+
                         @error('id_cliente')
                             <span class="text-red-500 text-xs">{{ $message }}</span>
                         @enderror

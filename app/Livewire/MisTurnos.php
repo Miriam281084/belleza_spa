@@ -138,15 +138,22 @@ class MisTurnos extends Component
             'hora.required' => 'La hora es obligatoria',
         ]);
 
-        // Verificar disponibilidad del empleado
+        // Verificar que el servicio existe
         $servicio = Servicio::find($this->servicio_id);
+
+        if (!$servicio) {
+            session()->flash('error', 'El servicio seleccionado no es válido. Por favor selecciona otro servicio.');
+            return;
+        }
+
+        // Verificar disponibilidad del empleado
         $horaInicio = Carbon::parse($this->fecha . ' ' . $this->hora);
         $horaFin = $horaInicio->copy()->addMinutes($servicio->duracion);
 
         $turnoSolapado = Turno::where('empleado_id', $this->empleado_id)
             ->where('fecha', $this->fecha)
             ->whereIn('estado', ['pendiente', 'confirmado'])
-            ->where(function($query) use ($horaInicio, $horaFin) {
+            ->where(function($query) use ($horaInicio, $horaFin, $servicio) {
                 $query->whereBetween('hora', [$horaInicio->format('H:i:s'), $horaFin->format('H:i:s')])
                     ->orWhereRaw('? BETWEEN hora AND ADDTIME(hora, SEC_TO_TIME(? * 60))',
                         [$horaInicio->format('H:i:s'), $servicio->duracion]);
@@ -172,6 +179,9 @@ class MisTurnos extends Component
         session()->flash('success', '¡Turno agendado exitosamente! Te enviaremos una confirmación pronto.');
         $this->cerrarModal();
         $this->resetPage();
+
+        // Forzar actualización del componente para que los botones funcionen inmediatamente
+        $this->dispatch('$refresh');
     }
 
     public function confirmarCancelar($turnoId)
@@ -189,8 +199,14 @@ class MisTurnos extends Component
                 // Solo permitir cancelar turnos pendientes o confirmados
                 if (in_array($turno->estado, ['pendiente', 'confirmado'])) {
                     // No permitir cancelar turnos dentro de las próximas 24 horas
-                    $fechaTurno = Carbon::parse($turno->fecha . ' ' . $turno->hora);
-                    if ($fechaTurno->diffInHours(now()) < 24 && $fechaTurno->isFuture()) {
+                    $fechaStr = $turno->fecha instanceof Carbon
+                        ? $turno->fecha->format('Y-m-d')
+                        : $turno->fecha;
+                    $fechaTurno = Carbon::parse($fechaStr . ' ' . $turno->hora);
+
+                    // Verificar si el turno es dentro de las próximas 24 horas
+                    $limite24Horas = Carbon::now()->addHours(24);
+                    if ($fechaTurno->isFuture() && $fechaTurno->lessThan($limite24Horas)) {
                         session()->flash('error', 'No puedes cancelar un turno con menos de 24 horas de anticipación. Por favor contacta al spa.');
                         $this->showCancelModal = false;
                         return;
@@ -207,6 +223,9 @@ class MisTurnos extends Component
         $this->showCancelModal = false;
         $this->turnoToCancel = null;
         $this->resetPage();
+
+        // Forzar actualización del componente
+        $this->dispatch('$refresh');
     }
 
     public function cerrarModalCancelar()

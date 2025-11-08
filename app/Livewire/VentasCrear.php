@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Producto;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
@@ -21,8 +22,45 @@ class VentasCrear extends Component
     public $productosEnCarrito = [];
     public $montoTotal = 0;
     public $buscarProducto = '';
+    public $esCliente = false;
+    public $clienteActual = null;
 
     protected $paginationTheme = 'tailwind';
+
+    public function mount()
+    {
+        $user = Auth::user();
+
+        // Verificar si el usuario autenticado tiene rol Cliente
+        if ($user->hasRole('Cliente')) {
+            $this->esCliente = true;
+
+            // Buscar o crear el perfil de cliente
+            $cliente = Cliente::where('user_id', $user->id)->first();
+
+            if (!$cliente) {
+                $cliente = Cliente::where('email', $user->email)->first();
+                if ($cliente) {
+                    $cliente->update(['user_id' => $user->id]);
+                }
+            }
+
+            if (!$cliente) {
+                $nombreCompleto = explode(' ', $user->name, 2);
+                $cliente = Cliente::create([
+                    'user_id' => $user->id,
+                    'nombre' => $nombreCompleto[0] ?? $user->name,
+                    'apellido' => $nombreCompleto[1] ?? '',
+                    'dni' => '',
+                    'email' => $user->email,
+                    'telefono' => '',
+                ]);
+            }
+
+            $this->clienteActual = $cliente;
+            $this->id_cliente = $cliente->id;
+        }
+    }
 
     // Resetear paginación cuando se busca
     public function updatingBuscarProducto()

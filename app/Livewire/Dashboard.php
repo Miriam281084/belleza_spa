@@ -3,19 +3,27 @@
 namespace App\Livewire;
 
 use App\Models\Cliente;
+use App\Models\Empleado;
 use App\Models\Pago;
 use App\Models\Producto;
 use App\Models\Turno;
 use App\Models\Venta;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app')]
 class Dashboard extends Component
 {
     public function render()
     {
+        $user = Auth::user();
         $hoy = now();
+
+        // Si es Esteticista, redirigir a su vista de turnos personales
+        if ($user->hasRole('Esteticista')) {
+            return redirect()->route('turnos.index');
+        }
 
         // Métricas del día
         $turnosHoy = Turno::whereDate('fecha', $hoy->toDateString())->count();
