@@ -13,8 +13,8 @@ class RedirectIfCliente
     {
         // Verificar si el usuario está autenticado y tiene el rol "Cliente"
         if (Auth::check() && Auth::user()->hasRole('Cliente')) {
-            // Redirigir al Cliente a su página de turnos con un mensaje informativo
-            return redirect()->route('mis-turnos')
+            // Redirigir al Cliente a su página de inicio con un mensaje informativo
+            return redirect()->route('cliente.inicio')
                 ->with('error', 'No tienes permisos para acceder a esa sección.');
         }
 

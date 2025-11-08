@@ -12,6 +12,10 @@ use App\Livewire\PagosRegistrar;
 use App\Livewire\PagosHistorial;
 use App\Livewire\Dashboard;
 use App\Livewire\MisTurnos;
+use App\Livewire\ClienteInicio;
+use App\Livewire\ClienteServicios;
+use App\Livewire\ClienteProductos;
+use App\Livewire\ClientePerfil;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TurnoController;
@@ -76,10 +80,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/turnos/eventos', [TurnoController::class, 'obtenerEventos'])->name('turnos.eventos');
     });
 
+    // ===== RUTAS PARA CLIENTES =====
+
+    // Inicio / Catálogo (público para clientes)
+    Route::get('/inicio', ClienteInicio::class)->name('cliente.inicio');
+
+    // Servicios con filtros
+    Route::get('/catalogo-servicios', ClienteServicios::class)->name('cliente.servicios');
+
+    // Productos tipo e-commerce
+    Route::get('/catalogo-productos', ClienteProductos::class)->name('cliente.productos');
+
     // Mis Turnos (para todos los usuarios autenticados, especialmente Clientes)
     Route::get('/mis-turnos', MisTurnos::class)->name('mis-turnos');
 
-    // Rutas específicas para Clientes (carrito y pagos)
+    // Carrito de compras y pagos
     Route::middleware(['permission:ver productos|ver ventas'])->group(function () {
         Route::get('/mi-carrito', VentasCrear::class)->name('mi-carrito');
         Route::get('/mis-compras', VentasHistorial::class)->name('mis-compras');
@@ -89,6 +104,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mis-pagos', PagosRegistrar::class)->name('mis-pagos');
         Route::get('/historial-pagos', PagosHistorial::class)->name('historial-pagos');
     });
+
+    // Perfil del cliente
+    Route::get('/mi-perfil', ClientePerfil::class)->name('cliente.perfil');
 });
 
 // Rutas de Mercado Pago (sin autenticación requerida para webhooks)

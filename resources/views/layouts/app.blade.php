@@ -21,7 +21,7 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0 flex items-center">
                         @if(Auth::user()->hasRole('Cliente'))
-                            <a href="{{ route('mis-turnos') }}" class="text-lg md:text-xl font-bold text-indigo-600">Belleza Spa</a>
+                            <a href="{{ route('cliente.inicio') }}" class="text-lg md:text-xl font-bold text-indigo-600">Belleza Spa</a>
                         @else
                             <a href="{{ route('dashboard') }}" class="text-lg md:text-xl font-bold text-indigo-600">Belleza Spa</a>
                         @endif
@@ -29,10 +29,25 @@
 
                     <!-- Navigation Links (Desktop) -->
                     <div class="hidden lg:ml-6 lg:flex lg:space-x-3 xl:space-x-5">
-                        {{-- Navegación para Clientes: Solo "Mis Turnos" --}}
+                        {{-- Navegación para Clientes --}}
                         @if(Auth::user()->hasRole('Cliente'))
+                            <a href="{{ route('cliente.inicio') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Inicio
+                            </a>
+                            <a href="{{ route('cliente.servicios') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Servicios
+                            </a>
+                            <a href="{{ route('cliente.productos') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Productos
+                            </a>
                             <a href="{{ route('mis-turnos') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Mis Turnos
+                            </a>
+                            <a href="{{ route('mi-carrito') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Mi Carrito
+                            </a>
+                            <a href="{{ route('cliente.perfil') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Mi Perfil
                             </a>
                         @else
                             {{-- Navegación para Admin, Recepcionista, Esteticista --}}
@@ -123,8 +138,23 @@
         <div x-show="open" @click.away="open = false" x-transition class="lg:hidden">
             <div class="pt-2 pb-3 space-y-1 border-t border-gray-200">
                 @if(Auth::user()->hasRole('Cliente'))
+                    <a href="{{ route('cliente.inicio') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        Inicio
+                    </a>
+                    <a href="{{ route('cliente.servicios') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        Servicios
+                    </a>
+                    <a href="{{ route('cliente.productos') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        Productos
+                    </a>
                     <a href="{{ route('mis-turnos') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
                         Mis Turnos
+                    </a>
+                    <a href="{{ route('mi-carrito') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        Mi Carrito
+                    </a>
+                    <a href="{{ route('cliente.perfil') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                        Mi Perfil
                     </a>
                 @else
                     <a href="{{ route('dashboard') }}" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
