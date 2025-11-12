@@ -51,10 +51,8 @@ class TurnosCalendario extends Component
             $this->esEsteticista = true;
             $this->puedeCrearTurnos = false; // Esteticistas NO pueden crear turnos
 
-            // Buscar su perfil de empleado
-            $this->empleadoActual = Empleado::where('user_id', $user->id)
-                ->orWhere('email', $user->email)
-                ->first();
+            // Buscar su perfil de empleado por email
+            $this->empleadoActual = Empleado::where('email', $user->email)->first();
         }
 
         $this->cargarDatos();

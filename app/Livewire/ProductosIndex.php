@@ -3,6 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Producto;
+use App\Events\StockActualizado;
+use App\Events\ProductoAgotado;
+use App\Events\ProductoDisponible;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
@@ -93,11 +96,33 @@ class ProductosIndex extends Component
         if ($this->productoId) {
             // Actualizar producto existente
             $producto = Producto::findOrFail($this->productoId);
+            $stockAnterior = $producto->stock;
             $producto->update($datos);
+
+            // Emitir evento de stock actualizado
+            if ($stockAnterior != $this->stock) {
+                broadcast(new StockActualizado($producto->fresh(), $stockAnterior, $this->stock))->toOthers();
+
+                // Verificar si el producto quedó agotado
+                if ($this->stock == 0 && $stockAnterior > 0) {
+                    broadcast(new ProductoAgotado($producto->fresh()))->toOthers();
+                }
+                // Verificar si el producto volvió a estar disponible
+                elseif ($this->stock > 0 && $stockAnterior == 0) {
+                    broadcast(new ProductoDisponible($producto->fresh()))->toOthers();
+                }
+            }
+
             $this->dispatch('mostrarMensaje', mensaje: 'Producto actualizado exitosamente.');
         } else {
             // Crear nuevo producto
-            Producto::create($datos);
+            $producto = Producto::create($datos);
+
+            // Emitir evento si se crea con stock
+            if ($this->stock > 0) {
+                broadcast(new ProductoDisponible($producto))->toOthers();
+            }
+
             $this->dispatch('mostrarMensaje', mensaje: 'Producto creado exitosamente.');
         }
 
@@ -130,8 +155,17 @@ class ProductosIndex extends Component
     public function agregarStock($productoId, $cantidad = 1)
     {
         $producto = Producto::findOrFail($productoId);
+        $stockAnterior = $producto->stock;
         $producto->stock += $cantidad;
         $producto->save();
+
+        // Emitir evento de stock actualizado
+        broadcast(new StockActualizado($producto, $stockAnterior, $producto->stock))->toOthers();
+
+        // Si el producto estaba agotado y ahora tiene stock, emitir evento de disponible
+        if ($stockAnterior == 0 && $producto->stock > 0) {
+            broadcast(new ProductoDisponible($producto))->toOthers();
+        }
 
         $this->dispatch('mostrarMensaje', mensaje: "Stock agregado correctamente. Nuevo stock: {$producto->stock}");
     }
@@ -146,8 +180,17 @@ class ProductosIndex extends Component
             return;
         }
 
+        $stockAnterior = $producto->stock;
         $producto->stock -= $cantidad;
         $producto->save();
+
+        // Emitir evento de stock actualizado
+        broadcast(new StockActualizado($producto, $stockAnterior, $producto->stock))->toOthers();
+
+        // Si el producto quedó agotado, emitir evento
+        if ($producto->stock == 0 && $stockAnterior > 0) {
+            broadcast(new ProductoAgotado($producto))->toOthers();
+        }
 
         $this->dispatch('mostrarMensaje', mensaje: "Stock restado correctamente. Nuevo stock: {$producto->stock}");
     }

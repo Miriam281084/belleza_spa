@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\Cliente;
 use App\Models\Producto;
 use App\Models\Venta;
+use App\Events\StockActualizado;
+use App\Events\ProductoAgotado;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -254,8 +256,17 @@ class VentasCrear extends Component
                 ]);
 
                 // Actualizar stock del producto
+                $stockAnterior = $producto->stock;
                 $producto->stock -= $item['cantidad'];
                 $producto->save();
+
+                // Emitir evento de stock actualizado
+                broadcast(new StockActualizado($producto, $stockAnterior, $producto->stock))->toOthers();
+
+                // Si el producto quedó agotado, emitir evento
+                if ($producto->stock == 0 && $stockAnterior > 0) {
+                    broadcast(new ProductoAgotado($producto))->toOthers();
+                }
             }
 
             DB::commit();

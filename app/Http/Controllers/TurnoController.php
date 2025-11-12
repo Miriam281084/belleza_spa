@@ -21,9 +21,7 @@ class TurnoController extends Controller
 
         // Si es Esteticista, solo mostrar sus propios turnos
         if ($user->hasRole('Esteticista')) {
-            $empleado = Empleado::where('user_id', $user->id)
-                ->orWhere('email', $user->email)
-                ->first();
+            $empleado = Empleado::where('email', $user->email)->first();
 
             if ($empleado) {
                 $query->where('empleado_id', $empleado->id);

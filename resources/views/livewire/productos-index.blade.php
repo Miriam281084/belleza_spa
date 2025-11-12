@@ -239,3 +239,47 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Escuchar eventos de WebSocket para actualizar el stock en tiempo real
+    if (window.Echo) {
+        window.Echo.channel('stock')
+            .listen('.stock.actualizado', (event) => {
+                console.log('Stock actualizado:', event);
+                // Recargar el componente Livewire para mostrar cambios
+                @this.call('$refresh');
+
+                // Mostrar notificación
+                window.dispatchEvent(new CustomEvent('mostrar-mensaje', {
+                    detail: {
+                        mensaje: `Stock de "${event.nombre}" actualizado: ${event.stock_nuevo} unidades`,
+                        tipo: 'success'
+                    }
+                }));
+            })
+            .listen('.producto.agotado', (event) => {
+                console.log('Producto agotado:', event);
+                @this.call('$refresh');
+
+                window.dispatchEvent(new CustomEvent('mostrar-mensaje', {
+                    detail: {
+                        mensaje: `¡AGOTADO! "${event.nombre}" ya no tiene stock`,
+                        tipo: 'error'
+                    }
+                }));
+            })
+            .listen('.producto.disponible', (event) => {
+                console.log('Producto disponible:', event);
+                @this.call('$refresh');
+
+                window.dispatchEvent(new CustomEvent('mostrar-mensaje', {
+                    detail: {
+                        mensaje: `"${event.nombre}" ahora está disponible con ${event.stock} unidades`,
+                        tipo: 'success'
+                    }
+                }));
+            });
+    }
+</script>
+@endpush

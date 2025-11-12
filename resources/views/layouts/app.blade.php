@@ -275,5 +275,27 @@
 
     @livewireScripts
     <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- Pusher JS & Laravel Echo desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.4.0-rc2/dist/web/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
+
+    <script>
+        // Inicializar Echo para WebSockets
+        window.Echo = new Echo({
+            broadcaster: 'reverb',
+            key: '{{ env('VITE_REVERB_APP_KEY') }}',
+            wsHost: '{{ env('VITE_REVERB_HOST') }}',
+            wsPort: {{ env('VITE_REVERB_PORT', 8080) }},
+            wssPort: {{ env('VITE_REVERB_PORT', 8080) }},
+            forceTLS: false,
+            enabledTransports: ['ws', 'wss'],
+            disableStats: true,
+        });
+
+        console.log('✅ Echo inicializado correctamente', window.Echo);
+    </script>
+
+    @stack('scripts')
 </body>
 </html>

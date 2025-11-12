@@ -248,3 +248,30 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Escuchar eventos de WebSocket para actualizar el carrito en tiempo real
+    if (window.Echo) {
+        window.Echo.channel('stock')
+            .listen('.stock.actualizado', (event) => {
+                console.log('Stock actualizado en carrito:', event);
+                @this.call('$refresh');
+            })
+            .listen('.producto.agotado', (event) => {
+                console.log('Producto agotado en carrito:', event);
+                @this.call('$refresh');
+
+                // Notificar si el usuario tenía ese producto en el carrito
+                const productosEnCarrito = @this.productosEnCarrito;
+                if (productosEnCarrito && productosEnCarrito[event.producto_id]) {
+                    alert(`⚠️ El producto "${event.nombre}" se ha agotado. Por favor, verifique su carrito.`);
+                }
+            })
+            .listen('.producto.disponible', (event) => {
+                console.log('Producto disponible en carrito:', event);
+                @this.call('$refresh');
+            });
+    }
+</script>
+@endpush

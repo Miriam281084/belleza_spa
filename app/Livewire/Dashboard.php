@@ -15,15 +15,18 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('layouts.app')]
 class Dashboard extends Component
 {
+    public function mount()
+    {
+        // Si es Esteticista, redirigir a su vista de turnos personales
+        if (Auth::user()->hasRole('Esteticista')) {
+            $this->redirect(route('turnos.index'), navigate: true);
+        }
+    }
+
     public function render()
     {
         $user = Auth::user();
         $hoy = now();
-
-        // Si es Esteticista, redirigir a su vista de turnos personales
-        if ($user->hasRole('Esteticista')) {
-            return redirect()->route('turnos.index');
-        }
 
         // Métricas del día
         $turnosHoy = Turno::whereDate('fecha', $hoy->toDateString())->count();

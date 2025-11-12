@@ -133,3 +133,24 @@
 
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Escuchar eventos de WebSocket para actualizar el catálogo en tiempo real
+    if (window.Echo) {
+        window.Echo.channel('stock')
+            .listen('.stock.actualizado', (event) => {
+                console.log('Stock actualizado en catálogo:', event);
+                @this.call('$refresh');
+            })
+            .listen('.producto.agotado', (event) => {
+                console.log('Producto agotado en catálogo:', event);
+                @this.call('$refresh');
+            })
+            .listen('.producto.disponible', (event) => {
+                console.log('Producto disponible en catálogo:', event);
+                @this.call('$refresh');
+            });
+    }
+</script>
+@endpush
