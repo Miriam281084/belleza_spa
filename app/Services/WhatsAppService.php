@@ -274,13 +274,13 @@ class WhatsAppService
             : \Carbon\Carbon::parse($turno->fecha)->format('d/m/Y');
 
         return "Hola {$turno->cliente->nombre}!\n\n" .
-               "✅ Tu turno ha sido confirmado en Belleza Spa Victoria\n\n" .
+               "✅ Tu turno ha sido confirmado en Belleza Spa \n\n" .
                "📅 Fecha: {$fecha}\n" .
                "⏰ Hora: {$turno->hora}\n" .
                "💆 Servicio: {$turno->servicio->nombre}\n" .
                "👤 Profesional: {$turno->empleado->nombre}\n\n" .
                "Te esperamos!\n" .
-               "Belleza Spa Victoria";
+               "Belleza Spa ";
     }
 
     /**
@@ -294,6 +294,9 @@ class WhatsAppService
         $fecha = $turno->fecha instanceof \Carbon\Carbon
             ? $turno->fecha->format('d/m/Y')
             : \Carbon\Carbon::parse($turno->fecha)->format('d/m/Y');
+
+
+        //TODO: usar el recordatorio de turno por ws con twilio cada media hora antes del turno
 
         return "Hola {$turno->cliente->nombre}!\n\n" .
                "🔔 Te recordamos tu turno en Belleza Spa Victoria\n\n" .

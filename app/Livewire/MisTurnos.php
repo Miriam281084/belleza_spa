@@ -59,7 +59,7 @@ class MisTurnos extends Component
                 'user_id' => $user->id,
                 'nombre' => $nombreCompleto[0] ?? $user->name,
                 'apellido' => $nombreCompleto[1] ?? '',
-                'dni' => '', // El usuario puede completarlo después
+                'dni' => null, // El usuario puede completarlo después
                 'email' => $user->email,
                 'telefono' => '',
             ]);
@@ -214,6 +214,9 @@ class MisTurnos extends Component
 
                     $turno->update(['estado' => 'cancelado']);
                     session()->flash('success', 'Turno cancelado exitosamente.');
+
+                    // Disparar evento para recargar el calendario en tiempo real
+                    $this->dispatch('recargarCalendario');
                 } else {
                     session()->flash('error', 'No puedes cancelar este turno.');
                 }

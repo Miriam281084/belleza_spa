@@ -20,6 +20,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 2500.00,
                 'stock' => 15,
                 'categoria' => 'Cremas',
+                'imagen' => 'images/products/cremafacial.jpg',
             ],
             [
                 'nombre' => 'Crema Antiedad Premium',
@@ -27,6 +28,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 3800.00,
                 'stock' => 8,
                 'categoria' => 'Cremas',
+                'imagen' => 'images/products/cremas.jpg',
             ],
             [
                 'nombre' => 'Aceite de Argán Puro',
@@ -34,6 +36,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 1200.00,
                 'stock' => 20,
                 'categoria' => 'Aceites',
+                'imagen' => 'images/products/aceitemasajes.jpg',
             ],
             [
                 'nombre' => 'Aceite Esencial de Lavanda',
@@ -41,6 +44,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 800.00,
                 'stock' => 25,
                 'categoria' => 'Aceites',
+                'imagen' => 'images/products/aceitemasajes.jpg',
             ],
             [
                 'nombre' => 'Sérum Vitamina C',
@@ -48,6 +52,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 3200.00,
                 'stock' => 12,
                 'categoria' => 'Cosméticos',
+                'imagen' => 'images/products/serumvitamina.jpg',
             ],
             [
                 'nombre' => 'Mascarilla de Arcilla Verde',
@@ -55,6 +60,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 1500.00,
                 'stock' => 3,
                 'categoria' => 'Mascarillas',
+                'imagen' => 'images/products/mascarillapurificante.jpg',
             ],
             [
                 'nombre' => 'Exfoliante Corporal Natural',
@@ -62,6 +68,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 1800.00,
                 'stock' => 10,
                 'categoria' => 'Corporales',
+                'imagen' => 'images/products/exfoliantecorporal.jpg',
             ],
             [
                 'nombre' => 'Loción Corporal Hidratante',
@@ -69,6 +76,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 2000.00,
                 'stock' => 18,
                 'categoria' => 'Corporales',
+                'imagen' => 'images/products/locion.jpg',
             ],
             [
                 'nombre' => 'Contorno de Ojos',
@@ -76,6 +84,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 2800.00,
                 'stock' => 6,
                 'categoria' => 'Cosméticos',
+                'imagen' => 'images/products/cremafacial.jpg',
             ],
             [
                 'nombre' => 'Protector Solar SPF 50',
@@ -83,6 +92,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 2200.00,
                 'stock' => 22,
                 'categoria' => 'Cosméticos',
+                'imagen' => 'images/products/cremas.jpg',
             ],
             [
                 'nombre' => 'Tónico Facial Refrescante',
@@ -90,6 +100,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 1400.00,
                 'stock' => 14,
                 'categoria' => 'Cosméticos',
+                'imagen' => 'images/products/locion.jpg',
             ],
             [
                 'nombre' => 'Bálsamo Labial Nutritivo',
@@ -97,6 +108,7 @@ class ProductosSeeder extends Seeder
                 'precio' => 600.00,
                 'stock' => 30,
                 'categoria' => 'Cosméticos',
+                'imagen' => 'images/products/cremafacial.jpg',
             ],
         ];
 

@@ -20,8 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
-        // Enviar recordatorios de turnos cada hora
-        $schedule->command('recordatorios:turnos')->hourly();
+        // Enviar recordatorios de turnos cada 5 minutos (30 min antes del turno)
+        $schedule->command('recordatorios:turnos')->everyFiveMinutes();
 
         // Enviar felicitaciones de cumpleaños diariamente a las 8 AM
         $schedule->command('cumpleanos:enviar')->dailyAt('08:00');

@@ -50,7 +50,7 @@ class ClientePerfil extends Component
                 'user_id' => $user->id,
                 'nombre' => $nombreCompleto[0] ?? $user->name,
                 'apellido' => $nombreCompleto[1] ?? '',
-                'dni' => '',
+                'dni' => null,
                 'email' => $user->email,
                 'telefono' => '',
             ]);

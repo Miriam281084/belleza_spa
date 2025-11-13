@@ -6,10 +6,10 @@
 <div class="w-full max-w-md">
     <!-- Logo y Título -->
     <div class="text-center mb-8">
-        <div class="inline-block p-4 bg-white rounded-full shadow-lg mb-4">
-            <svg class="w-16 h-16 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+        <div class="inline-block mb-4">
+            <img src="{{ asset('images/login/fotologin.jpg') }}"
+                 alt="Belleza Spa"
+                 class="w-64 h-40 object-cover rounded-2xl shadow-2xl border-4 border-white/20 backdrop-blur-sm hover:scale-105 transition-transform duration-300">
         </div>
         <h1 class="text-4xl font-bold text-white mb-2">Belleza Spa</h1>
         <p class="text-purple-100">Bienvenido de nuevo</p>

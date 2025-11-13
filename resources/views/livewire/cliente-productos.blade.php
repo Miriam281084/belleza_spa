@@ -69,17 +69,25 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
             @forelse($productos as $producto)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition group">
-                    <!-- Imagen placeholder -->
-                    <div class="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center relative overflow-hidden">
-                        <svg class="w-20 h-20 text-purple-300 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
+                    <!-- Imagen del producto -->
+                    <div class="aspect-square relative overflow-hidden bg-gray-100">
+                        @if($producto->imagen)
+                            <img src="{{ asset($producto->imagen) }}"
+                                 alt="{{ $producto->nombre }}"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                                <svg class="w-20 h-20 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                        @endif
                         @if($producto->stock < 5 && $producto->stock > 0)
-                            <span class="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                            <span class="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full shadow-lg">
                                 ¡Últimas {{ $producto->stock }}!
                             </span>
                         @elseif($producto->stock == 0)
-                            <span class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            <span class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-lg">
                                 Agotado
                             </span>
                         @endif

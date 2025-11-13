@@ -20,7 +20,7 @@ class EnviarRecordatoriosTurnos extends Command
      *
      * @var string
      */
-    protected $description = 'Enviar recordatorios de turnos que están dentro de una hora';
+    protected $description = 'Enviar recordatorios de turnos que están 30 minutos antes';
 
     /**
      * Execute the console command.
@@ -29,14 +29,16 @@ class EnviarRecordatoriosTurnos extends Command
     {
         $this->info('Buscando turnos para enviar recordatorios...');
 
-        // Obtener turnos de hoy dentro de la próxima hora
+        // Obtener turnos que están entre 30 y 35 minutos en el futuro
+        // (margen de 5 minutos para asegurar que el comando capture el turno)
         $ahora = now();
-        $unaHoraDespues = now()->addHour();
+        $treintaMinutosDespues = now()->addMinutes(30);
+        $treintaCincoMinutosDespues = now()->addMinutes(35);
 
         $turnos = Turno::with(['cliente', 'servicio', 'empleado'])
             ->whereDate('fecha', $ahora->toDateString())
-            ->whereTime('fecha', '>=', $ahora->toTimeString())
-            ->whereTime('fecha', '<=', $unaHoraDespues->toTimeString())
+            ->whereTime('fecha', '>=', $treintaMinutosDespues->toTimeString())
+            ->whereTime('fecha', '<=', $treintaCincoMinutosDespues->toTimeString())
             ->whereIn('estado', ['pendiente', 'confirmado'])
             ->get();
 
