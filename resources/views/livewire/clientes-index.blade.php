@@ -69,18 +69,9 @@
                                         wire:click="editar({{ $cliente->id }})"
                                         wire:loading.attr="disabled"
                                         wire:target="editar"
-                                        class="text-indigo-600 hover:text-indigo-900 mr-3 disabled:opacity-50"
+                                        class="text-indigo-600 hover:text-indigo-900 disabled:opacity-50"
                                     >
                                         Editar
-                                    </button>
-                                    <button
-                                        wire:click="eliminar({{ $cliente->id }})"
-                                        wire:confirm="¿Está seguro de eliminar este cliente?"
-                                        wire:loading.attr="disabled"
-                                        wire:target="eliminar"
-                                        class="text-red-600 hover:text-red-900 disabled:opacity-50"
-                                    >
-                                        Eliminar
                                     </button>
                                 </td>
                             </tr>

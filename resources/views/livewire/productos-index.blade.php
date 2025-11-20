@@ -94,19 +94,12 @@
                         </div>
 
                         <!-- Acciones -->
-                        <div class="flex space-x-2">
+                        <div>
                             <button
                                 wire:click="editar({{ $producto->id }})"
-                                class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded text-sm"
+                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded text-sm"
                             >
                                 Editar
-                            </button>
-                            <button
-                                wire:click="eliminar({{ $producto->id }})"
-                                wire:confirm="¿Está seguro de eliminar este producto?"
-                                class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded text-sm"
-                            >
-                                Eliminar
                             </button>
                         </div>
                     </div>
@@ -156,8 +149,7 @@
                                     </div>
                                 </td>
                                 <td class="px-4 lg:px-6 py-3 text-sm">
-                                    <button wire:click="editar({{ $producto->id }})" class="text-indigo-600 hover:text-indigo-900 mr-2">Editar</button>
-                                    <button wire:click="eliminar({{ $producto->id }})" wire:confirm="¿Eliminar?" class="text-red-600 hover:text-red-900">Eliminar</button>
+                                    <button wire:click="editar({{ $producto->id }})" class="text-indigo-600 hover:text-indigo-900">Editar</button>
                                 </td>
                             </tr>
                         @empty

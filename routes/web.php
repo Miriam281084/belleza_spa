@@ -11,6 +11,7 @@ use App\Livewire\VentasHistorial;
 use App\Livewire\PagosRegistrar;
 use App\Livewire\PagosHistorial;
 use App\Livewire\Dashboard;
+use App\Livewire\DashboardEsteticista;
 use App\Livewire\MisTurnos;
 use App\Livewire\ClienteInicio;
 use App\Livewire\ClienteServicios;
@@ -41,6 +42,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard (solo para empleados: Admin, Recepcionista, Esteticista)
     Route::get('/dashboard', Dashboard::class)->name('dashboard')->middleware('no.cliente');
+
+    // Dashboard específico para Esteticistas
+    Route::get('/dashboard-esteticista', DashboardEsteticista::class)->name('dashboard.esteticista')->middleware('no.cliente');
 
     // Gestión de clientes (requiere permiso y no ser Cliente)
     Route::middleware(['no.cliente', 'permission:ver clientes'])->group(function () {

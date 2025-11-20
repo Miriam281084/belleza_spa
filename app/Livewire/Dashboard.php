@@ -17,9 +17,9 @@ class Dashboard extends Component
 {
     public function mount()
     {
-        // Si es Esteticista, redirigir a su vista de turnos personales
+        // Si es Esteticista, redirigir a su dashboard personalizado
         if (Auth::user()->hasRole('Esteticista')) {
-            $this->redirect(route('turnos.index'), navigate: true);
+            $this->redirect(route('dashboard.esteticista'), navigate: true);
         }
     }
 
