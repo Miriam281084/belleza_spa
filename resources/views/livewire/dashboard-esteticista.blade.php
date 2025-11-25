@@ -11,7 +11,7 @@
         </div>
 
         <!-- Tarjetas de Estadísticas -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-4 md:mb-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 mb-4 md:mb-6">
 
             <!-- Total de Turnos -->
             <div class="bg-white rounded-lg shadow p-3 md:p-4">
@@ -34,6 +34,14 @@
                 <div class="text-center">
                     <p class="text-xs md:text-sm font-medium text-gray-600 mb-1">Confirmados</p>
                     <p class="text-2xl md:text-3xl font-bold text-green-600">{{ $estadisticas['confirmados'] }}</p>
+                </div>
+            </div>
+
+            <!-- En Proceso -->
+            <div class="bg-white rounded-lg shadow p-3 md:p-4">
+                <div class="text-center">
+                    <p class="text-xs md:text-sm font-medium text-gray-600 mb-1">En Proceso</p>
+                    <p class="text-2xl md:text-3xl font-bold text-purple-600">{{ $estadisticas['completado'] ?? 0 }}</p>
                 </div>
             </div>
 
@@ -108,16 +116,53 @@
                             @endif
                         </div>
 
-                        <!-- Estado -->
-                        <div class="flex-shrink-0">
-                            <span class="px-3 py-1 text-xs md:text-sm rounded-full capitalize font-semibold
-                                @if($turno->estado === 'pendiente') bg-yellow-100 text-yellow-800
-                                @elseif($turno->estado === 'confirmado') bg-green-100 text-green-800
-                                @elseif($turno->estado === 'realizado') bg-blue-100 text-blue-800
-                                @elseif($turno->estado === 'cancelado') bg-red-100 text-red-800
-                                @endif">
-                                {{ $turno->estado }}
-                            </span>
+                        <!-- Estado - Dropdown para cambiar -->
+                        <div class="flex-shrink-0" x-data="{ open: false }">
+                            <div class="relative">
+                                <button @click="open = !open" type="button" class="px-3 py-1 text-xs md:text-sm rounded-full capitalize font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 inline-flex items-center
+                                    @if($turno->estado === 'pendiente') bg-yellow-100 text-yellow-800 hover:bg-yellow-200
+                                    @elseif($turno->estado === 'confirmado') bg-green-100 text-green-800 hover:bg-green-200
+                                    @elseif($turno->estado === 'completado') bg-purple-100 text-purple-800 hover:bg-purple-200
+                                    @elseif($turno->estado === 'realizado') bg-blue-100 text-blue-800 hover:bg-blue-200
+                                    @elseif($turno->estado === 'cancelado') bg-red-100 text-red-800 hover:bg-red-200
+                                    @endif">
+                                    {{ $turno->estado }}
+                                    <svg class="ml-1 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                <!-- Dropdown Menu -->
+                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                    <div class="py-1">
+                                        @if($turno->estado !== 'pendiente')
+                                        <button wire:click="cambiarEstado({{ $turno->id }}, 'pendiente')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50">
+                                            <span class="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>Pendiente
+                                        </button>
+                                        @endif
+                                        @if($turno->estado !== 'confirmado')
+                                        <button wire:click="cambiarEstado({{ $turno->id }}, 'confirmado')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50">
+                                            <span class="inline-block w-3 h-3 rounded-full bg-green-400 mr-2"></span>Confirmado
+                                        </button>
+                                        @endif
+                                        @if($turno->estado !== 'completado')
+                                        <button wire:click="cambiarEstado({{ $turno->id }}, 'completado')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
+                                            <span class="inline-block w-3 h-3 rounded-full bg-purple-400 mr-2"></span>En Proceso
+                                        </button>
+                                        @endif
+                                        @if($turno->estado !== 'realizado')
+                                        <button wire:click="cambiarEstado({{ $turno->id }}, 'realizado')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">
+                                            <span class="inline-block w-3 h-3 rounded-full bg-blue-400 mr-2"></span>Realizado
+                                        </button>
+                                        @endif
+                                        @if($turno->estado !== 'cancelado')
+                                        <button wire:click="cambiarEstado({{ $turno->id }}, 'cancelado')" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 border-t">
+                                            <span class="inline-block w-3 h-3 rounded-full bg-red-400 mr-2"></span>Cancelar
+                                        </button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

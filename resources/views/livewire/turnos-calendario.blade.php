@@ -19,6 +19,7 @@
 
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
                     <h2 class="text-xl md:text-2xl font-bold text-gray-800">Calendario de Turnos</h2>
+                    @if($puedeCrearTurnos)
                     <button
                         wire:click="abrirModalCrear('{{ date('Y-m-d') }}', '09:00')"
                         type="button"
@@ -29,6 +30,7 @@
                         </svg>
                         Nueva Cita
                     </button>
+                    @endif
                 </div>
 
                 <!-- Leyenda de colores -->

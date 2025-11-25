@@ -46,10 +46,13 @@ class TurnosCalendario extends Component
     {
         $user = Auth::user();
 
-        // Si es Esteticista, redirigir a su dashboard personalizado
-        if ($user->hasRole('Esteticista')) {
-            $this->redirect(route('dashboard.esteticista'), navigate: true);
-            return;
+        // Detectar si es esteticista
+        $this->esEsteticista = $user->hasRole('Esteticista');
+
+        if ($this->esEsteticista) {
+            // Buscar su perfil de empleado
+            $this->empleadoActual = Empleado::where('email', $user->email)->first();
+            $this->puedeCrearTurnos = false; // Esteticistas no pueden crear turnos
         }
 
         $this->cargarDatos();

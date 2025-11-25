@@ -28,6 +28,33 @@ class DashboardEsteticista extends Component
         $this->empleadoActual = Empleado::where('email', $user->email)->first();
     }
 
+    public function cambiarEstado($turnoId, $nuevoEstado)
+    {
+        try {
+            $turno = Turno::findOrFail($turnoId);
+
+            // Verificar que el turno pertenece a esta esteticista
+            if ($this->empleadoActual && $turno->empleado_id !== $this->empleadoActual->id) {
+                session()->flash('error', 'No puedes modificar turnos de otras esteticistas.');
+                return;
+            }
+
+            // Validar que el estado sea válido
+            $estadosPermitidos = ['pendiente', 'confirmado', 'completado', 'realizado', 'cancelado'];
+            if (!in_array($nuevoEstado, $estadosPermitidos)) {
+                session()->flash('error', 'Estado no válido.');
+                return;
+            }
+
+            $turno->estado = $nuevoEstado;
+            $turno->save();
+
+            session()->flash('success', 'Estado del turno actualizado exitosamente.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error al actualizar el estado: ' . $e->getMessage());
+        }
+    }
+
     public function render()
     {
         $hoy = now();
@@ -52,6 +79,7 @@ class DashboardEsteticista extends Component
             $estadisticas['total'] = $turnosHoy->count();
             $estadisticas['pendientes'] = $turnosHoy->where('estado', 'pendiente')->count();
             $estadisticas['confirmados'] = $turnosHoy->where('estado', 'confirmado')->count();
+            $estadisticas['completado'] = $turnosHoy->where('estado', 'completado')->count();
             $estadisticas['realizados'] = $turnosHoy->where('estado', 'realizado')->count();
             $estadisticas['cancelados'] = $turnosHoy->where('estado', 'cancelado')->count();
         }
