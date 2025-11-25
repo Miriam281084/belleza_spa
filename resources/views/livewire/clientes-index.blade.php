@@ -14,6 +14,7 @@
 
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Gestión de Clientes</h2>
+                @unless($soloLectura)
                 <button
                     wire:click="abrirModal"
                     type="button"
@@ -21,6 +22,7 @@
                 >
                     Nuevo Cliente
                 </button>
+                @endunless
             </div>
 
             <!-- Campo de búsqueda -->
@@ -50,7 +52,9 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Nac.</th>
+                            @unless($soloLectura)
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            @endunless
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -64,6 +68,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $cliente->fecha_nacimiento ? $cliente->fecha_nacimiento->format('d/m/Y') : '-' }}
                                 </td>
+                                @unless($soloLectura)
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button
                                         wire:click="editar({{ $cliente->id }})"
@@ -74,10 +79,11 @@
                                         Editar
                                     </button>
                                 </td>
+                                @endunless
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="{{ $soloLectura ? '6' : '7' }}" class="px-6 py-4 text-center text-gray-500">
                                     No se encontraron clientes.
                                 </td>
                             </tr>

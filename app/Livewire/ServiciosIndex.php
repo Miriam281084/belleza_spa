@@ -11,6 +11,7 @@ use Livewire\Attributes\Layout;
 class ServiciosIndex extends Component
 {
     use WithPagination;
+    public $soloLectura = false;
 
     // Propiedades de búsqueda y control del modal
     public $search = '';
@@ -33,16 +34,19 @@ class ServiciosIndex extends Component
     }
 
     public function render()
-    {
-        $servicios = Servicio::where('nombre', 'like', "%{$this->search}%")
-            ->orWhere('descripcion', 'like', "%{$this->search}%")
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+{
+    // Verificar si el usuario es esteticista para activar modo solo lectura
+    $this->soloLectura = auth()->user()->hasRole('Esteticista');
 
-        return view('livewire.servicios-index', [
-            'servicios' => $servicios
-        ]);
-    }
+    $servicios = Servicio::where('nombre', 'like', "%{$this->search}%")
+        ->orWhere('descripcion', 'like', "%{$this->search}%")
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+    return view('livewire.servicios-index', [
+        'servicios' => $servicios
+    ]);
+}
 
     public function abrirModal()
     {

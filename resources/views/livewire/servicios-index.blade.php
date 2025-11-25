@@ -14,6 +14,7 @@
 
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Gestión de Servicios</h2>
+                @unless($soloLectura)
                 <button
                     wire:click="abrirModal"
                     type="button"
@@ -21,6 +22,7 @@
                 >
                     Nuevo Servicio
                 </button>
+                @endunless
             </div>
 
             <!-- Campo de búsqueda -->
@@ -48,7 +50,9 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duración</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                            @unless($soloLectura)
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            @endunless
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -60,6 +64,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $servicio->duracion }} min</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($servicio->precio, 2) }}</td>
+                                @unless($soloLectura)
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <button
                                         wire:click="editar({{ $servicio->id }})"
@@ -70,10 +75,11 @@
                                         Editar
                                     </button>
                                 </td>
+                                @endunless
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="{{ $soloLectura ? '4' : '5' }}" class="px-6 py-4 text-center text-gray-500">
                                     No se encontraron servicios.
                                 </td>
                             </tr>

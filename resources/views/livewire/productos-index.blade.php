@@ -16,6 +16,7 @@
             <!-- Header responsive -->
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-6 gap-3">
                 <h2 class="text-xl md:text-2xl font-bold text-gray-800">Gestión de Productos</h2>
+                @unless($soloLectura)
                 <button
                     wire:click="abrirModal"
                     type="button"
@@ -23,6 +24,7 @@
                 >
                     + Nuevo Producto
                 </button>
+                @endunless
             </div>
 
             <!-- Campo de búsqueda -->
@@ -72,6 +74,7 @@
                             @endif
                         </div>
 
+                        @unless($soloLectura)
                         <!-- Ajustar stock -->
                         <div class="flex items-center justify-between mb-3">
                             <span class="text-sm font-medium text-gray-700">Ajustar:</span>
@@ -102,6 +105,7 @@
                                 Editar
                             </button>
                         </div>
+                        @endunless
                     </div>
                 @empty
                     <div class="text-center py-8 text-gray-500">
@@ -120,8 +124,10 @@
                             <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden lg:table-cell">Descripción</th>
                             <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio</th>
                             <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                            @unless($soloLectura)
                             <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ajustar</th>
                             <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                            @endunless
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -142,6 +148,7 @@
                                         <span class="text-gray-900">{{ $producto->stock }}</span>
                                     @endif
                                 </td>
+                                @unless($soloLectura)
                                 <td class="px-4 lg:px-6 py-3">
                                     <div class="flex items-center space-x-1">
                                         <button wire:click="restarStock({{ $producto->id }})" class="bg-red-500 hover:bg-red-600 text-white font-bold px-2 py-1 rounded text-xs">-</button>
@@ -151,10 +158,11 @@
                                 <td class="px-4 lg:px-6 py-3 text-sm">
                                     <button wire:click="editar({{ $producto->id }})" class="text-indigo-600 hover:text-indigo-900">Editar</button>
                                 </td>
+                                @endunless
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No se encontraron productos.</td>
+                                <td colspan="{{ $soloLectura ? '5' : '7' }}" class="px-6 py-4 text-center text-gray-500">No se encontraron productos.</td>
                             </tr>
                         @endforelse
                     </tbody>

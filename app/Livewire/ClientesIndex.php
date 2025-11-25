@@ -11,6 +11,7 @@ use Livewire\Attributes\Layout;
 class ClientesIndex extends Component
 {
     use WithPagination;
+    public $soloLectura = false;
 
     // Propiedades de búsqueda y control del modal
     public $search = '';
@@ -36,6 +37,9 @@ class ClientesIndex extends Component
 
     public function render()
     {
+        // Verificar si el usuario es esteticista para activar modo solo lectura
+        $this->soloLectura = auth()->user()->hasRole('Esteticista');
+
         $clientes = Cliente::where('nombre', 'like', "%{$this->search}%")
             ->orWhere('apellido', 'like', "%{$this->search}%")
             ->orWhere('dni', 'like', "%{$this->search}%")
