@@ -11,25 +11,21 @@ use Livewire\Attributes\Layout;
 class ClientesIndex extends Component
 {
     use WithPagination;
-    public $soloLectura = false;
 
-    // Propiedades de búsqueda y control del modal
     public $search = '';
     public $modalAbierto = false;
     public $editando = false;
     public $clienteId;
 
-    // Propiedades del formulario
     public $nombre;
     public $apellido;
     public $dni;
+    public $fecha_nacimiento;
     public $telefono;
     public $email;
-    public $fecha_nacimiento;
 
     protected $paginationTheme = 'tailwind';
 
-    // Resetear la paginación cuando se busca
     public function updatingSearch()
     {
         $this->resetPage();
@@ -37,23 +33,21 @@ class ClientesIndex extends Component
 
     public function render()
     {
-        // Verificar si el usuario es esteticista para activar modo solo lectura
-        $this->soloLectura = auth()->user()->hasRole('Esteticista');
-
-        $clientes = Cliente::where('nombre', 'like', "%{$this->search}%")
+        $clientes = Cliente::query()
+            ->where('nombre', 'like', "%{$this->search}%")
             ->orWhere('apellido', 'like', "%{$this->search}%")
-            ->orWhere('dni', 'like', "%{$this->search}%")
             ->orWhere('email', 'like', "%{$this->search}%")
+            ->orWhere('dni', 'like', "%{$this->search}%")
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('livewire.clientes-index', [
-            'clientes' => $clientes
-        ]);
+        return view('livewire.clientes-index', compact('clientes'));
     }
 
     public function abrirModal()
     {
+        if (!auth()->user()->hasAnyRole(['Admin', 'Recepcionista'])) abort(403);
+
         $this->resetearFormulario();
         $this->modalAbierto = true;
         $this->editando = false;
@@ -71,43 +65,55 @@ class ClientesIndex extends Component
         $this->nombre = '';
         $this->apellido = '';
         $this->dni = '';
+        $this->fecha_nacimiento = '';
         $this->telefono = '';
         $this->email = '';
-        $this->fecha_nacimiento = '';
         $this->resetValidation();
     }
 
     public function guardar()
     {
-        $rules = [
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'dni' => 'required|string|max:20|unique:clientes,dni,' . $this->clienteId,
-            'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255|unique:clientes,email,' . $this->clienteId,
-            'fecha_nacimiento' => 'nullable|date|before:today',
-        ];
-
-        $this->validate($rules);
-
-        $datos = [
-            'nombre' => $this->nombre,
-            'apellido' => $this->apellido,
-            'dni' => $this->dni,
-            'telefono' => $this->telefono,
-            'email' => $this->email,
-            'fecha_nacimiento' => $this->fecha_nacimiento,
-        ];
+        if (!auth()->user()->hasAnyRole(['Admin', 'Recepcionista'])) abort(403);
 
         if ($this->clienteId) {
-            // Actualizar cliente existente
+
+            $rules = [
+                'telefono' => 'nullable|string|max:20',
+                'email' => 'required|email|max:255|unique:clientes,email,' . $this->clienteId,
+            ];
+
+            $this->validate($rules);
+
             $cliente = Cliente::findOrFail($this->clienteId);
-            $cliente->update($datos);
-            $this->dispatch('mostrarMensaje', mensaje: 'Cliente actualizado exitosamente.');
+            $cliente->update([
+                'telefono' => $this->telefono,
+                'email' => $this->email,
+            ]);
+
+            $this->dispatch('mostrarMensaje', mensaje: 'Cliente actualizado');
         } else {
-            // Crear nuevo cliente
-            Cliente::create($datos);
-            $this->dispatch('mostrarMensaje', mensaje: 'Cliente creado exitosamente.');
+
+            $rules = [
+                'nombre' => 'required|string|max:255',
+                'apellido' => 'required|string|max:255',
+                'dni' => 'required|string|max:50|unique:clientes,dni',
+                'fecha_nacimiento' => 'nullable|date',
+                'telefono' => 'nullable|string|max:20',
+                'email' => 'required|email|max:255|unique:clientes,email',
+            ];
+
+            $this->validate($rules);
+
+            Cliente::create([
+                'nombre' => $this->nombre,
+                'apellido' => $this->apellido,
+                'dni' => $this->dni,
+                'fecha_nacimiento' => $this->fecha_nacimiento,
+                'telefono' => $this->telefono,
+                'email' => $this->email,
+            ]);
+
+            $this->dispatch('mostrarMensaje', mensaje: 'Cliente creado');
         }
 
         $this->cerrarModal();
@@ -115,24 +121,24 @@ class ClientesIndex extends Component
 
     public function editar($id)
     {
-        $cliente = Cliente::findOrFail($id);
+        if (!auth()->user()->hasAnyRole(['Admin', 'Recepcionista'])) abort(403);
 
-        $this->clienteId = $cliente->id;
-        $this->nombre = $cliente->nombre;
-        $this->apellido = $cliente->apellido;
-        $this->dni = $cliente->dni;
-        $this->telefono = $cliente->telefono;
-        $this->email = $cliente->email;
-        $this->fecha_nacimiento = $cliente->fecha_nacimiento?->format('Y-m-d');
+        $c = Cliente::findOrFail($id);
+
+        $this->clienteId = $c->id;
+        $this->nombre = $c->nombre;
+        $this->apellido = $c->apellido;
+        $this->dni = $c->dni;
+        $this->fecha_nacimiento = $c->fecha_nacimiento;
+        $this->telefono = $c->telefono;
+        $this->email = $c->email;
+
         $this->editando = true;
         $this->modalAbierto = true;
     }
 
     public function eliminar($id)
     {
-        $cliente = Cliente::findOrFail($id);
-        $cliente->delete();
-
-        $this->dispatch('mostrarMensaje', mensaje: 'Cliente eliminado exitosamente.');
+        abort(403);
     }
 }

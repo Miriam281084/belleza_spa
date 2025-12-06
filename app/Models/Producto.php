@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Producto extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'nombre',
         'descripcion',
         'precio',
         'stock',
         'categoria',
+        'estado',      // ← NECESARIO para que se guarde el estado
     ];
 
     protected $casts = [
