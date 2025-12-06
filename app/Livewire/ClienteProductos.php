@@ -12,93 +12,83 @@ class ClienteProductos extends Component
 {
     use WithPagination;
 
-    public $buscar = '';
-    public $filtroCategoria = '';
-    public $filtroPrecio = '';
-    public $ordenar = 'nombre_asc';
-    public $soloDisponibles = true;
+    // Filtros y búsqueda
+    public $buscar           = '';
+    public $filtroCategoria  = '';
+    public $filtroPrecio     = '';
+    public $ordenar          = 'nombre_asc';
+    public $soloDisponibles  = false;
 
     protected $paginationTheme = 'tailwind';
 
-    public function updatingBuscar()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingFiltroCategoria()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingFiltroPrecio()
-    {
-        $this->resetPage();
-    }
+    // Cuando cambia cualquier filtro, volvemos a la página 1
+    public function updatingBuscar()          { $this->resetPage(); }
+    public function updatingFiltroCategoria() { $this->resetPage(); }
+    public function updatingFiltroPrecio()    { $this->resetPage(); }
+    public function updatingOrdenar()         { $this->resetPage(); }
+    public function updatingSoloDisponibles() { $this->resetPage(); }
 
     public function limpiarFiltros()
     {
-        $this->buscar = '';
+        $this->buscar          = '';
         $this->filtroCategoria = '';
-        $this->filtroPrecio = '';
-        $this->ordenar = 'nombre_asc';
-        $this->soloDisponibles = true;
+        $this->filtroPrecio    = '';
+        $this->ordenar         = 'nombre_asc';
+        $this->soloDisponibles = false;
         $this->resetPage();
-    }
-
-    public function getCategoriasProperty()
-    {
-        return Producto::select('categoria')
-            ->distinct()
-            ->whereNotNull('categoria')
-            ->where('categoria', '!=', '')
-            ->pluck('categoria');
     }
 
     public function render()
     {
-        $query = Producto::query();
+        // Categorías solo de productos activos
+        $categorias = Producto::where('estado', 'Activo')
+            ->whereNotNull('categoria')
+            ->distinct()
+            ->pluck('categoria')
+            ->filter() // quita null / vacíos
+            ->values();
 
-        // Solo productos con stock
-        if ($this->soloDisponibles) {
-            $query->where('stock', '>', 0);
-        }
+        $query = Producto::query()
+            ->where('estado', 'Activo');
 
-        // Filtro por búsqueda
-        if ($this->buscar) {
-            $query->where(function($q) {
+        // Buscar por nombre o descripción
+        if (!empty($this->buscar)) {
+            $query->where(function ($q) {
                 $q->where('nombre', 'like', "%{$this->buscar}%")
                   ->orWhere('descripcion', 'like', "%{$this->buscar}%");
             });
         }
 
         // Filtro por categoría
-        if ($this->filtroCategoria) {
+        if (!empty($this->filtroCategoria)) {
             $query->where('categoria', $this->filtroCategoria);
         }
 
         // Filtro por precio
-        if ($this->filtroPrecio) {
+        if (!empty($this->filtroPrecio)) {
             switch ($this->filtroPrecio) {
-                case '500':
+                case '500':       // Menos de 500
                     $query->where('precio', '<', 500);
                     break;
-                case '1000':
+                case '1000':      // 500 - 1000
                     $query->whereBetween('precio', [500, 1000]);
                     break;
-                case '2000':
+                case '2000':      // 1000 - 2000
                     $query->whereBetween('precio', [1000, 2000]);
                     break;
-                case '2000+':
+                case '2000+':     // Más de 2000
                     $query->where('precio', '>', 2000);
                     break;
             }
         }
 
+        // Solo productos con stock > 0
+        if ($this->soloDisponibles) {
+            $query->where('stock', '>', 0);
+        }
+
         // Ordenamiento
         switch ($this->ordenar) {
-            case 'nombre_asc':
-                $query->orderBy('nombre', 'asc');
-                break;
             case 'nombre_desc':
                 $query->orderBy('nombre', 'desc');
                 break;
@@ -111,13 +101,17 @@ class ClienteProductos extends Component
             case 'nuevo':
                 $query->orderBy('created_at', 'desc');
                 break;
+            case 'nombre_asc':
+            default:
+                $query->orderBy('nombre', 'asc');
+                break;
         }
 
         $productos = $query->paginate(12);
 
         return view('livewire.cliente-productos', [
-            'productos' => $productos,
-            'categorias' => $this->categorias,
+            'productos'  => $productos,
+            'categorias' => $categorias,
         ]);
     }
 }
